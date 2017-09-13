@@ -64,8 +64,8 @@ fun seconds(hours: Int, minutes: Int, seconds: Int): Int {
  */
 fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double {
     val arsh:Int = arshins + sagenes * 3
-    val versh:Double = vershoks + arsh * 48
-    return versh
+    val versh:Int = vershoks + arsh * 48
+    return  versh * 4.445 / 100
 }
 
 /**
