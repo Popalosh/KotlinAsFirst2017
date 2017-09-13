@@ -63,10 +63,10 @@ fun seconds(hours: Int, minutes: Int, seconds: Int): Int {
  * 1 сажень = 3 аршина = 48 вершков, 1 вершок = 4.445 см.
  */
 fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double {
-    val arsh: Int = arshins*48 /3
+    val arsh: Int = (arshins*48).div(3)
     val sag: Int = sagenes*48
     val ver: Int = vershoks +  sag + arsh
-    return ver * 4.445 / 100
+    return (ver * 4.445).div(100)
 }
 
 /**
@@ -75,7 +75,11 @@ fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double {
  * Пользователь задает угол в градусах, минутах и секундах (например, 36 градусов 14 минут 35 секунд).
  * Вывести значение того же угла в радианах (например, 0.63256).
  */
-fun angleInRadian(grad: Int, min: Int, sec: Int): Double = TODO()
+fun angleInRadian(grad: Int, min: Int, sec: Int): Double {
+    val m:Int = sec.div(60) + min
+    val g:Int = m.div(60) + grad
+    return (g * 3.1415).div(180)
+}
 
 /**
  * Тривиальная
