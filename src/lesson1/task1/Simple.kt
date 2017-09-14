@@ -76,9 +76,9 @@ fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double {
  * Вывести значение того же угла в радианах (например, 0.63256).
  */
 fun angleInRadian(grad: Int, min: Int, sec: Int): Double {
-    val m:Int = sec.div(60) + min
-    val g:Int = m.div(60) + grad
-    return (g * PI).div(180)
+    val m = sec.div(60.0) + min
+    val g = m.div(60.0) + grad
+    return (g * PI).div(180.0)
 }
 
 /**
@@ -121,10 +121,8 @@ fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minute
  * Например, 100 рублей под 10% годовых превратятся в 133.1 рубля
  */
 fun accountInThreeYears(initial: Int, percent: Int): Double {
-    val per = percent.div(100).toDouble()
-    val i1 = initial * per
-    val i2 = i1 * per
-    return i2 * per
+    val p = percent.div(100.0)
+    return initial * p * p * p
 
 }
 
