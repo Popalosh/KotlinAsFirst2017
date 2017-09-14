@@ -136,3 +136,4 @@ fun accountInThreeYears(initial: Int, percent: Int): Double {
 fun numberRevert(number: Int): Int {
     return revert(number)
 }
+
