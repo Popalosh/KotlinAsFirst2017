@@ -37,10 +37,22 @@ fun ageDescription(age: Int) {
     if (age%10 == 1 ) {
         println("$age год")
     }
-    if (!(age%10 != 2 || 3 || 4)) {
+    if (age%10 == 2) {
+        println("$age года")
+    } else if (age%10 == 3) {
+        println("$age года")
+    } else if (age%10 == 4) {
         println("$age года")
     }
-    if (age%10 == 5 || 6 || 7 ||  8 || 9 ) {
+    if (age%10 == 5) {
+        println ("$age лет")
+    } else if (age%10 == 6) {
+        println ("$age лет")
+    } else if (age%10 == 7) {
+        println ("$age лет")
+    } else if (age%10 == 8) {
+        println ("$age лет")
+    } else if (age%10 == 9) {
         println ("$age лет")
     }
 }
