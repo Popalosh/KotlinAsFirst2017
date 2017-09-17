@@ -53,7 +53,7 @@ fun main(args: Array<String>) {
  * Рассчитать время в секундах, прошедшее с начала суток (30035 в данном случае).
  */
 fun seconds(hours: Int, minutes: Int, seconds: Int): Int {
-    return ( hours * 60 * 60 + minutes * 60 + seconds)
+    return ( 60 * (hours * 60  + minutes)  + seconds )
 }
 
 /**
@@ -64,10 +64,10 @@ fun seconds(hours: Int, minutes: Int, seconds: Int): Int {
  * 1 сажень = 3 аршина = 48 вершков, 1 вершок = 4.445 см.
  */
 fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double {
-    val arsh: Int = (arshins*48).div(3)
-    val sag: Int = sagenes*48
+    val arsh: Int = arshins / 16
+    val sag: Int = sagenes * 48
     val ver: Int = vershoks +  sag + arsh
-    return (ver * 4.445).div(100)
+    return ver * 0.04445
 }
 
 /**
@@ -77,9 +77,9 @@ fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double {
  * Вывести значение того же угла в радианах (например, 0.63256).
  */
 fun angleInRadian(grad: Int, min: Int, sec: Int): Double {
-    val m = sec.div(60.0) + min
-    val g = m.div(60.0) + grad
-    return (g * PI).div(180.0)
+    val m = sec / 60 + min
+    val g = m / 60 + grad
+    return (g * PI) / 180
 }
 
 /**
@@ -134,8 +134,8 @@ fun accountInThreeYears(initial: Int, percent: Int): Double {
  *Необходимо вывести число, полученное из заданного перестановкой цифр в обратном порядке (например, 874).
  */
 fun numberRevert(number: Int): Int {
-    val a = number.div(100)
-    val b = number.div(10)%10 * 10
-    val c = number%10 * 100
+    val a = number / 100
+    val b = number / 10 % 10 * 10
+    val c = number % 10 * 100
     return a + b + c
 }
