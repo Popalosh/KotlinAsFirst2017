@@ -34,14 +34,16 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  * Мой возраст. Для заданного 0 < n < 200, рассматриваемого как возраст человека,
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
-fun ageDescription(age: Int) {
-    when (age) {
-        in 10..19 -> println("$age лет")
-        in 110..119 -> println("$age лет")
-        else ->
-            if (age % 10 == 0 || age % 10 == 5 || age % 10 == 6 || age % 10 == 7 || age % 10 == 8 || age % 10 == 9) println("$age лет")
-            else if (age % 10 == 1) println("$age год")
-            else if (age % 10 == 2 || age % 10 == 3 || age % 10 == 4) println("$age года")
+fun ageDescription(age: Int):String {
+    return when (age % 100) {
+        in 5..20 -> """$age лет"""
+        else -> when (age % 10) {
+            1 -> """$age год"""
+            else -> when (age % 10) {
+                in 2..4 -> """$age года"""
+                else -> """$age лет"""
+            }
+        }
     }
 }
 
