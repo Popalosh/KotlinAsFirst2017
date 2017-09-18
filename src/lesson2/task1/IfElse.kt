@@ -3,6 +3,9 @@ package lesson2.task1
 
 import com.sun.org.apache.xpath.internal.operations.Or
 import lesson1.task1.discriminant
+import lesson1.task1.sqr
+import java.lang.Math.abs
+import java.lang.Math.sqrt
 
 /**
  * Пример
@@ -109,7 +112,14 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
 fun rookOrBishopThreatens(kingX: Int, kingY: Int,
                           rookX: Int, rookY: Int,
                           bishopX: Int, bishopY: Int): Int {
-
+    if (kingX == rookX || kingY == rookY) {
+        if (abs(kingX - bishopX) == abs(kingY - bishopY))
+            return 3
+        else return 1
+    }
+    else if (abs(kingX - bishopX) == abs(kingY - bishopY))
+        return 2
+    else return 0
 }
 
 
@@ -121,7 +131,7 @@ fun rookOrBishopThreatens(kingX: Int, kingY: Int,
  * прямоугольным (вернуть 1) или тупоугольным (вернуть 2).
  * Если такой треугольник не существует, вернуть -1.
  */
-fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
+fun triangleKind(a: Double, b: Double, c: Double): Int = TODO ()
 
 /**
  * Средняя
