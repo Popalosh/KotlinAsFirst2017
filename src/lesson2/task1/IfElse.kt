@@ -108,7 +108,9 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
  */
 fun rookOrBishopThreatens(kingX: Int, kingY: Int,
                           rookX: Int, rookY: Int,
-                          bishopX: Int, bishopY: Int): Int = TODO ()
+                          bishopX: Int, bishopY: Int): Int {
+
+}
 
 
 /**
