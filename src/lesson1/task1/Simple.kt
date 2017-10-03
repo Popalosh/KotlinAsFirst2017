@@ -53,7 +53,7 @@ fun main(args: Array<String>) {
  * Рассчитать время в секундах, прошедшее с начала суток (30035 в данном случае).
  */
 fun seconds(hours: Int, minutes: Int, seconds: Int): Int {
-    return ( 60 * (hours * 60  + minutes)  + seconds )
+    return 60 * (hours * 60  + minutes)  + seconds
 }
 
 /**
@@ -77,9 +77,9 @@ fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double {
  * Вывести значение того же угла в радианах (например, 0.63256).
  */
 fun angleInRadian(grad: Int, min: Int, sec: Int): Double {
-    val m = (sec / 60.0) + min
-    val g = (m / 60) + grad
-    return (g * PI) / 180
+    val m = sec / 60.0 + min
+    val g = m / 60 + grad
+    return g * PI / 180
 }
 
 /**
@@ -122,9 +122,8 @@ fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minute
  * Например, 100 рублей под 10% годовых превратятся в 133.1 рубля
  */
 fun accountInThreeYears(initial: Int, percent: Int): Double {
-    val p = 1 + percent.div(100.0)
-    return initial * p * p * p
-
+    val p = 1 + percent/100.0
+    return initial * pow(p,3.0)
 }
 
 /**

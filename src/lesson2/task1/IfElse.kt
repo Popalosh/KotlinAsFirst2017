@@ -61,18 +61,11 @@ fun ageDescription(age: Int):String {
 fun timeForHalfWay(t1: Double, v1: Double,
                    t2: Double, v2: Double,
                    t3: Double, v3: Double): Double {
-    val s1 = t1 * v1
-    val s2 = t2 * v2
-    val s3 = t3 * v3
-    val a = (s1 + s2 + s3) / 2
-    if (a <= s1) {
-        return  a / v1
-    } else {
-        if ((a > s1) && (a <= s1 + s2)) {
-            return t1 + (a - s1) / v2
-        } else {
-            return t1 + t2 + (a - s1 - s2) / v3
-        }
+    val halfway = ((t1 * v1 + t2 * v2 + t3 * v3) / 2)
+    return when {
+        (t1 * v1 >= halfway) -> halfway / v1
+        ((t1 * v1 + t2 * v2) >= halfway) -> (halfway - t1 * v1) / v2 + t1
+        else -> (halfway - t1 * v1 - t2 * v2) / v3 + t1 + t2
     }
 }
 
@@ -131,7 +124,18 @@ fun rookOrBishopThreatens(kingX: Int, kingY: Int,
  * прямоугольным (вернуть 1) или тупоугольным (вернуть 2).
  * Если такой треугольник не существует, вернуть -1.
  */
-fun triangleKind(a: Double, b: Double, c: Double): Int = TODO ()
+fun triangleKind(a: Double, b: Double, c: Double): Int {
+        val a2 = a * a
+        val b2 = b * b
+        val c2 = c * c
+        if ((a + b <= c) || (a + c <= b) || (b + c <= a)) return -1
+        return when {
+            (a2 == b2 + c2) || (b2 == a2 + c2) || (c2 == a2 + b2) -> 1
+            (a2 < b2 + c2) && (b2 < a2 + c2) && (c2 < a2 + b2) -> 0
+            (a2 > b2 + c2) || (b2 > a2 + c2) || (c2 > a2 + b2) -> 2
+            else -> -1
+        }
+    }
 
 /**
  * Средняя
@@ -141,4 +145,16 @@ fun triangleKind(a: Double, b: Double, c: Double): Int = TODO ()
  * Найти длину пересечения отрезков AB и CD.
  * Если пересечения нет, вернуть -1.
  */
-fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int = TODO()
+fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
+    return when {
+        ((a > c && a > d) || (c > a && c > b)) -> -1
+        else -> when {
+            (b == c) -> 0
+            (c >= a) && (d <= b) -> (d - c)
+            (a >= c) && (b <= d) -> (b - a)
+            (a > c) -> (d - a)
+            (c > a) -> (b - c)
+            else -> -1
+        }
+    }
+}
