@@ -22,11 +22,9 @@ fun isNumberHappy(number: Int): Boolean {
     val sum12 = (((number - number % 100) / 100) % 10) + (((number - number % 100) / 100)
             - ((number - number % 100) / 100) % 10) / 10
     val sum34 = number % 10 + (number % 100 - number % 10) / 10
-    return when {
-        (sum34 == sum12) -> true
-        else -> false
+    return (sum34 == sum12)
     }
-}
+
 /**
  * Простая
  *
