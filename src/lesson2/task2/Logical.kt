@@ -35,7 +35,6 @@ fun isNumberHappy(number: Int): Boolean {
 fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean {
  return ((x1 == x2) || (y1 == y2) || (abs(x1 - x2) == abs(y1 - y2)))
     }
-}
 
 /**
  * Средняя
@@ -47,7 +46,7 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean {
 fun circleInside(x1: Double, y1: Double, r1: Double,
                  x2: Double, y2: Double, r2: Double): Boolean {
     return ((sqrt(pow((x2 - x1), 2.0) + pow((y2 - y1), 2.0)) + r1) <= r2)
-}
+                 }
 
 /**
  * Средняя
@@ -66,4 +65,3 @@ fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
         else -> false
     }
 }
-
