@@ -81,13 +81,13 @@ fun timeForHalfWay(t1: Double, v1: Double,
 fun whichRookThreatens(kingX: Int, kingY: Int,
                        rookX1: Int, rookY1: Int,
                        rookX2: Int, rookY2: Int): Int {
-    val kr2x = kingX == rookX2
-    val kr2y = kingY == rookY2
+    val equalityx = kingX == rookX2
+    val equalityy = kingY == rookY2
     if (kingX == rookX1 || kingY == rookY1)
-        if (kr2x || kr2y) return 3
+        if (equalityx || equalityy) return 3
         else return 1
     else
-        if (kr2x || kr2y) return 2
+        if (equalityx || equalityy) return 2
         else return 0
 }
 
@@ -154,10 +154,10 @@ fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
         ((a > c && a > d) || (c > a && c > b)) -> -1
         else -> when {
             (b == c) -> 0
-            (c >= a) && (d <= b) -> (d - c)
-            (a >= c) && (b <= d) -> (b - a)
-            (a > c) -> (d - a)
-            (c > a) -> (b - c)
+            (c >= a) && (d <= b) -> d - c
+            (a >= c) && (b <= d) -> b - a
+            (a > c) -> d - a
+            (c > a) -> b - c
             else -> -1
         }
     }

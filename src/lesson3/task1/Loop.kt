@@ -105,11 +105,13 @@ fun lcm(m: Int, n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    var mindiv = 1
-    do {
-        mindiv++
-    } while (n % mindiv != 0)
-    return mindiv
+    if (isPrime(n))
+        return n
+    for (i in 2..(sqrt(n.toDouble())).toInt()) {
+        if (n % i == 0)
+            return i
+    }
+    return n
 }
 
 /**
@@ -118,11 +120,12 @@ fun minDivisor(n: Int): Int {
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 fun maxDivisor(n: Int): Int {
-    var maxdiv = n
-    do {
-        maxdiv--
-    } while (n % maxdiv != 0)
-    return maxdiv
+    return if (isPrime(n)) 1
+    else {
+        var maxdiv = n / 2
+        while (n % maxdiv != 0) maxdiv--
+        maxdiv
+    }
 }
 
 /**
@@ -133,16 +136,12 @@ fun maxDivisor(n: Int): Int {
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
 fun isCoPrime(m: Int, n: Int): Boolean {
-    var cp = 0
-    if (m > n) cp = n else cp = m
-    if (cp != 1) {
-        for (i in 2..cp)
-            if ((n % i == 0) && (m % i == 0)) {
-                cp = 1; break
-            }
-    } else
-        cp = 0
-    return cp != 1
+    val min = minOf(m, n)
+    for (i in 2..min) {
+        if ((m % i == 0) && (n % i == 0))
+            return false
+    }
+    return true
 }
 
 /**
@@ -165,17 +164,7 @@ fun squareBetweenExists(m: Int, n: Int): Boolean {
  * sin(x) = x - x^3 / 3! + x^5 / 5! - x^7 / 7! + ...
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
-fun sin(x: Double, eps: Double): Double {
-    var a = x
-    var b = 1
-    var sin = x % (2 * Math.PI)
-    while (Math.abs(a) >= eps) {
-        a = -a * (x % (2 * Math.PI)) / ((b * 2 + 1) * (b * 2)).toDouble() * (x % (2 * Math.PI))
-        b += 1
-        sin += a
-    }
-    return sin
-}
+fun sin(x: Double, eps: Double): Double = TODO()
 
 /**
  * Средняя
@@ -184,17 +173,7 @@ fun sin(x: Double, eps: Double): Double {
  * cos(x) = 1 - x^2 / 2! + x^4 / 4! - x^6 / 6! + ...
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
-fun cos(x: Double, eps: Double): Double {
-    var a = 1.0
-    var b = 1
-    var cos = 1.0
-    while (Math.abs(a) >= eps) {
-        a = -a * (x % (2 * Math.PI)) / ((b * 2 - 1) * (b * 2)).toDouble() * (x % (2 * Math.PI))
-        b += 1
-        cos += a
-    }
-    return cos
-}
+fun cos(x: Double, eps: Double): Double = TODO()
 
 /**
  * Средняя
@@ -203,15 +182,15 @@ fun cos(x: Double, eps: Double): Double {
  * Не использовать строки при решении задачи.
  */
 fun revert(n: Int): Int {
-        var res = 0
-        var dig = n
-        do {
-            res *= 10
-            res += dig % 10
-            dig /= 10
-        } while (dig > 0)
-        return res
-    }
+    var res = 0
+    var dig = n
+    do {
+        res *= 10
+        res += dig % 10
+        dig /= 10
+    } while (dig > 0)
+    return res
+}
 
 /**
  * Средняя
@@ -221,7 +200,7 @@ fun revert(n: Int): Int {
  * 15751 -- палиндром, 3653 -- нет.
  */
 fun isPalindrome(n: Int): Boolean {
-    return (revert(n) == n)
+    return revert(n) == n
 }
 
 /**
@@ -231,26 +210,7 @@ fun isPalindrome(n: Int): Boolean {
  * Например, 54 и 323 состоят из разных цифр, а 111 и 0 из одинаковых.
  */
 fun hasDifferentDigits(n: Int): Boolean {
-    var a = n
-    var b = 0
-    var l = 1
-    var k = 0
-    while (a >= 10) {
-        a /= 10; k += 1; l *= 10
-    }
-    a = k
-    var c = l
-    for (i in 1..k) {
-        c = l
-        for (j in 1..a) {
-            c = l / 10
-            b = n / c % 10
-            if (b != (n / l % 10)) return true
-        }
-        l /= 10
-        a -= 1
-    }
-    return false
+    return digitCountInNumber(n, (n % 10)) != digitNumber(n)
 }
 
 /**
@@ -283,20 +243,17 @@ fun squareSequenceDigit(n: Int): Int {
  */
 fun fibSequenceDigit(n: Int): Int {
     var seq = 0
-    var iter =1
+    var iter = 1
     var count = 0
-    while(count < n) {
+    while (count < n) {
         seq = fib(iter)
         count += digitNumber(fib(iter))
         iter++
     }
 
-    while(count != n){
-        count --
-        seq /=  10
+    while (count != n) {
+        count--
+        seq /= 10
     }
     return seq % 10
 }
-
-// Cделал все локально и не отправял ввиду определенных семейных обстоятельсв. Ну никак не мог отправить в течении октября
-// Надеюсь, что оценка за работу не будет зависеть от скорости ее выполнения. Спасибо
