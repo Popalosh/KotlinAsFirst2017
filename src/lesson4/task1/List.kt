@@ -3,6 +3,7 @@ package lesson4.task1
 
 import lesson1.task1.discriminant
 import lesson1.task1.sqr
+import lesson3.task1.digitNumber
 import java.lang.Math.pow
 import java.lang.Math.sqrt
 
@@ -251,7 +252,12 @@ fun convert(n: Int, base: Int): List<Int> {
  * строчными буквами: 10 -> a, 11 -> b, 12 -> c и так далее.
  * Например: n = 100, base = 4 -> 1210, n = 250, base = 14 -> 13c
  */
-fun convertToString(n: Int, base: Int): String = TODO()
+fun convertToString(n: Int, base: Int): String {
+    val digitName = listOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f',
+            'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z')
+    val newN = convert(n, base).map { digitName[it] }
+    return newN.joinToString("")
+}
 
 /**
  * Средняя
@@ -279,7 +285,14 @@ fun decimal(digits: List<Int>, base: Int): Int {
  * 10 -> a, 11 -> b, 12 -> c и так далее.
  * Например: str = "13c", base = 14 -> 250
  */
-fun decimalFromString(str: String, base: Int): Int = TODO()
+fun decimalFromString(str: String, base: Int): Int {
+    val list = mutableListOf<Int>()
+    for (i in 0 until str.length) {
+        if (str[i] - 'a' in 0..25) list.add(str[i] - 'a' + 10)
+        else list.add(str[i].toString().toInt())
+    }
+    return decimal(list, base)
+}
 
 /**
  * Сложная
@@ -311,4 +324,55 @@ fun roman(n: Int): String {
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
+
+fun part(n: Int, id: Int): MutableList<String> {
+    if (n == 0) return mutableListOf()
+    val extra = listOf("", "тысяч", "миллионов", "миллиардов")
+    val hundreds = listOf(listOf("", "один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять"),
+            listOf("", "десять", "двадцать", "тридцать", "сорок", "пятьдесят",
+                    "шестьдесят", "семьдесят","восемьдесят", "девяносто"),
+            listOf("", "сто", "двести", "триста", "четыреста", "пятьсот",
+                    "шестьсот", "семьсот", "восемьсот", "девятьсот"))
+
+    val thousands = listOf(listOf("", "одна тысяча", "две тысячи", "три тысячи", "четыре тысячи"),
+            listOf("", "один миллион", "два миллиона", "три миллиона", "четыре миллиона"),
+            listOf("", "один миллиард", "два миллиарда"))
+
+    val teens = listOf("", "одиннадцать", "двенадцать", "тринадцать", "четырнадцать",
+            "пятнадцать", "шестнадцать", "семнадцать", "восемнадцать", "девятнадцать")
+    val result = mutableListOf<String>()
+    var newN = n
+    var logic = true
+    if (n % 100 in 11..19) {
+        result.add(hundreds[2][n / 100])
+        result.add(teens[n % 10])
+        result.add(extra[id])
+        return result
+    }
+    for (i in 0..2) {
+        if (i == 0 && id != 0 && n % 10 in  1..4) {
+            result.add(thousands [id - 1][n % 10])
+            logic = false
+            newN /= 10
+            continue
+        }
+        result.add(0, hundreds[i][newN % 10])
+        newN /= 10
+    }
+    if (logic) result.add(extra[id])
+    return result
+}
+
+fun russian(n: Int): String {
+    if (n == 0) return "ноль"
+    if (n == Int.MIN_VALUE)
+        return "минус два миллиарда сто сорок семь миллионов четыреста восемьдесят три тысячи шестьсот сорок восемь"
+    var result = mutableListOf<String>()
+    var newN = abs(n)
+    for (i in 0..(digitNumber(abs(n)) - 1) / 3) {
+        result = (part(newN % 1000, i) + result).toMutableList()
+        newN /= 1000
+    }
+    if (n < 0) result.add(0, "минус")
+    return (result).filter { it != "" }.joinToString(" ")
+}

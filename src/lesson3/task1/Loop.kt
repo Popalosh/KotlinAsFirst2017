@@ -120,12 +120,7 @@ fun minDivisor(n: Int): Int {
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 fun maxDivisor(n: Int): Int {
-    return if (isPrime(n)) 1
-    else {
-        var maxdiv = n / 2
-        while (n % maxdiv != 0) maxdiv--
-        maxdiv
-    }
+    return n / minDivisor(n)
 }
 
 /**
