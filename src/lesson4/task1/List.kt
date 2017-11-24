@@ -3,9 +3,14 @@ package lesson4.task1
 
 import lesson1.task1.discriminant
 import lesson1.task1.sqr
-import lesson3.task1.digitNumber
 import java.lang.Math.pow
 import java.lang.Math.sqrt
+
+val hundreds = listOf("сто", "двести", "триста", "четыреста", "пятьсот", "шестьсот", "семьсот", "восемьсот", "девятьсот")
+val tens = listOf("двадцать", "тридцать", "сорок", "пятьдесят", "шестьдесят", "семьдесят", "восемьдесят", "девяносто")
+val tens2 = listOf("десять", "одиннадцать", "двенадцать", "тринадцать", "четырнадцать", "пятнадцать", "шестнадцать", "семнадцать", "восемнадцать", "девятнадцать")
+val units = listOf("одна", "две", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
+val units2 = listOf("один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
 
 /**
  * Пример
@@ -324,4 +329,37 @@ fun roman(n: Int): String {
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
+fun partOfRussian(middle: Int, hundred: List<String>, ten: List<String>, ten1: List<String>, units: List<String>): List<String> {
+    val result = mutableListOf<String>()
+    if (middle / 100 >= 1) {
+        val hd = middle / 100
+        result.add(hundred[hd - 1])
+    }
+    if (middle % 100 / 10 == 1) {
+        val tn1 = middle % 10
+        result.add(ten1[tn1])
+    } else if (middle % 100 / 10 == 0) {
+        val un = middle % 10
+        if (un >= 1) result.add(units[un - 1])
+    } else {
+        val tn = middle % 100 / 10
+        result.add(ten[tn - 2])
+        val un = middle % 10
+        if (un >= 1) result.add(units[un - 1])
+    }
+    return result
+}
+
+fun russian(n: Int): String {
+    val result = mutableListOf<String>()
+    val part1 = n / 1000
+    if (part1 > 0) {
+        result.addAll(partOfRussian(part1, hundreds, tens, tens2, units))
+        if ((part1 % 10 == 1) && (part1 / 10 % 10 != 1)) result.add("тысяча")
+        else if (!(part1 % 100 / 10 == 1) && (part1 % 10 == 2 || part1 % 10 == 3 || part1 % 10 == 4)) result.add("тысячи")
+        else result.add("тысяч")
+    }
+    val part2 = n % 1000
+    result.addAll(partOfRussian(part2, hundreds, tens, tens2, units2))
+    return result.joinToString(separator = " ")
+}
