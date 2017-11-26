@@ -151,9 +151,10 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  * то есть, существует ли такое целое k, что m <= k*k <= n.
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
-fun squareBetweenExists(m: Int, n: Int) {
+fun squareBetweenExists(m: Int, n: Int): Boolean {
     for (i in m..n)
-        sqrt(i.toDouble()) % 1.0 == 0.0
+        if (sqrt(i.toDouble()) % 1.0 == 0.0) return true
+    return false
 }
 
 /**
