@@ -153,8 +153,7 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
     for (i in m..n)
-        if (sqrt(i.toDouble()) % 1.0 == 0.0) return true
-    return false
+        return sqrt(i.toDouble()) % 1.0 == 0.0
 }
 
 /**
