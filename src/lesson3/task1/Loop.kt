@@ -92,11 +92,16 @@ fun fib(n: Int): Int {
  * минимальное число k, которое делится и на m и на n без остатка
  */
 fun lcm(m: Int, n: Int): Int {
-    var max = maxOf(m, n)
-    while ((max % m != 0) || (max % n != 0)) {
-        max++
+    var newM = m
+    var newN = n
+    val prod = newM * newN
+    while (newM != newN) {
+        if (newM > newN)
+            newM -= newN
+        else
+            newN -= newM
     }
-    return max
+    return prod / newM
 }
 
 /**
