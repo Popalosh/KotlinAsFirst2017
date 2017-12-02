@@ -1,4 +1,5 @@
 @file:Suppress("UNUSED_PARAMETER")
+
 package lesson3.task1
 
 import lesson1.task1.sqr
@@ -37,7 +38,7 @@ fun isPrime(n: Int): Boolean {
  */
 fun isPerfect(n: Int): Boolean {
     var sum = 1
-    for (m in 2..n/2) {
+    for (m in 2..n / 2) {
         if (n % m > 0) continue
         sum += m
         if (sum > n) break
@@ -82,8 +83,9 @@ fun digitNumber(n: Int): Int {
 fun fib(n: Int): Int {
     val a = 1.0 / 2.0
     val b = sqrt(5.0) / 2.0
-    return ((pow(a + b, n.toDouble()) - pow(a - b, n.toDouble())) / sqrt(5.0)).toInt()
+    return (round((pow(a + b, n.toDouble()) - pow(a - b, n.toDouble())) / sqrt(5.0)).toInt())
 }
+
 
 /**
  * Простая
@@ -136,12 +138,7 @@ fun maxDivisor(n: Int): Int {
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
 fun isCoPrime(m: Int, n: Int): Boolean {
-    val min = minOf(m, n)
-    for (i in 2..min) {
-        if ((m % i == 0) && (n % i == 0))
-            return false
-    }
-    return true
+    return lcm(m, n) == m * n
 }
 
 /**

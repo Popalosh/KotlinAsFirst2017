@@ -1,11 +1,8 @@
 @file:Suppress("UNUSED_PARAMETER")
 package lesson2.task1
 
-import com.sun.org.apache.xpath.internal.operations.Or
 import lesson1.task1.discriminant
-import lesson1.task1.sqr
 import java.lang.Math.abs
-import java.lang.Math.sqrt
 
 /**
  * Пример
@@ -81,13 +78,13 @@ fun timeForHalfWay(t1: Double, v1: Double,
 fun whichRookThreatens(kingX: Int, kingY: Int,
                        rookX1: Int, rookY1: Int,
                        rookX2: Int, rookY2: Int): Int {
-    val equalityx = kingX == rookX2
-    val equalityy = kingY == rookY2
+    val equalityX = kingX == rookX2
+    val equalityY = kingY == rookY2
     if (kingX == rookX1 || kingY == rookY1)
-        if (equalityx || equalityy) return 3
+        if (equalityX || equalityY) return 3
         else return 1
     else
-        if (equalityx || equalityy) return 2
+        if (equalityX || equalityY) return 2
         else return 0
 }
 

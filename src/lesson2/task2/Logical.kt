@@ -21,7 +21,7 @@ fun pointInsideCircle(x: Double, y: Double, x0: Double, y0: Double, r: Double) =
 fun isNumberHappy(number: Int): Boolean {
     val sum12 = (((number - number % 100) / 100) % 10) + (((number - number % 100) / 100)
             - ((number - number % 100) / 100) % 10) / 10
-    val sum34 = number % 10 + (number % 100 - number % 10) / 10
+    val sum34 = number % 10 + number % 100  / 10
     return sum34 == sum12
 }
 
