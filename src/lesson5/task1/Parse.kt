@@ -1,4 +1,5 @@
 @file:Suppress("UNUSED_PARAMETER")
+
 package lesson5.task1
 
 val months = listOf("января", "февраля", "марта", "апреля", "мая", "июня",
@@ -51,12 +52,10 @@ fun main(args: Array<String>) {
         val seconds = timeStrToSeconds(line)
         if (seconds == -1) {
             println("Введённая строка $line не соответствует формату ЧЧ:ММ:СС")
-        }
-        else {
+        } else {
             println("Прошло секунд с начала суток: $seconds")
         }
-    }
-    else {
+    } else {
         println("Достигнут <конец файла> в процессе чтения строки. Программа прервана")
     }
 }
@@ -70,15 +69,20 @@ fun main(args: Array<String>) {
  * При неверном формате входной строки вернуть пустую строку
  */
 fun dateStrToDigit(str: String): String {
-    val parts = str.split(" ")
-    if (parts.size != 3) return ""
-    return try {
-        if (parts[0].length !in 1..2 || months.indexOf(parts[1]) + 1 == 0 || parts[2].toInt() < 0) ""
-        else twoDigitStr(parts[0].toInt()) + "." +
-                twoDigitStr(months.indexOf(parts[1]) + 1) + "." +
-                "${parts[2].toInt()}"
-    } catch (e: NumberFormatException) { "" }
+    val date = str.split(" ")
+    if (date.size == 3) {
+        try {
+            val day = date[0].toInt()
+            if ((date[1] in months) && (day in 1..31)) {
+                val month = months.indexOf(date[1]) + 1
+                return String.format("%02d.%02d.%d", day, month, date[2].toInt())
+            } else return ""
+        } catch (e: NumberFormatException) {
+            return ""
+        }
+    } else return ""
 }
+
 
 /**
  * Средняя
@@ -88,17 +92,21 @@ fun dateStrToDigit(str: String): String {
  * При неверном формате входной строки вернуть пустую строку
  */
 fun dateDigitToStr(digital: String): String {
-    val parts = digital.split(".")
-    if (parts.size != 3) return ""
-    return try {
-        when {
-            (parts[1].toInt() !in 1..12) -> ""
-            (parts[0].length != 2 || parts[1].length != 2) -> ""
-            else -> "${parts[0].toInt()} ${months[parts[1].toInt() - 1]} ${parts[2].toInt()}"
-        }
+    try {
+        val date = digital.split(".")
+        if (date.size == 3) {
+            val day = date[0].toInt()
+            val month = date[1].toInt()
+            if (day in 1..31 && month in 1..12)
+                return ("$day ${months[month - 1]} ${date[2]}")
+            else
+                return ""
+        } else return ""
+    } catch (e: NumberFormatException) {
+        return ""
     }
-    catch (e: NumberFormatException) { "" }
 }
+
 
 /**
  * Средняя
@@ -113,16 +121,15 @@ fun dateDigitToStr(digital: String): String {
  * При неверном формате вернуть пустую строку
  */
 fun flattenPhoneNumber(phone: String): String {
-    if (phone == "+") return ""
-    val whiteList = "+1234567890 -()"
+    var numbsInPhone = 0
+    for (i in phone)
+        if (i in '0'..'9') numbsInPhone++
+    if (phone.isEmpty() || phone.indexOf('+') > 0 || numbsInPhone == 0) return ""
     val number = mutableListOf<Char>()
-    var plusSum = 0
     for (char in phone) {
-        if (char !in whiteList) return ""
-        if (char == '+') plusSum++
-        if (whiteList.indexOf(char) in 0..10) number.add(char)
+        if (char in '0'..'9' || char == '+') number += char
+        else if (char != '(' && char != ')' && char != ' ' && char != '-') return ""
     }
-    if (number.isEmpty() || number[0] != '+' && plusSum == 1 || plusSum > 1) return ""
     return number.joinToString("")
 }
 
@@ -137,9 +144,17 @@ fun flattenPhoneNumber(phone: String): String {
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
 fun bestLongJump(jumps: String): Int {
-    val whiteList = "1234567890 -%"
-    for (char in jumps) if (char !in whiteList) return -1
-    return jumps.split(" ").filter { it != "-" && it != "%" && it != "" }.map { it.toInt() }.max() ?: -1
+    if (jumps.isEmpty()) return -1
+    val list = jumps.trim().split(" ")
+    var maxResult = -1
+    for (element in list) {
+        if (element.isNotEmpty() && element[0] in '0'..'9') {
+            if (element.toInt() > maxResult)
+                maxResult = element.toInt()
+        } else if (element == " " || element == "-" || element == "%" || element == "") continue
+        else return -1
+    }
+    return maxResult
 }
 
 /**
@@ -153,17 +168,13 @@ fun bestLongJump(jumps: String): Int {
  * При нарушении формата входной строки вернуть -1.
  */
 fun bestHighJump(jumps: String): Int {
-    val whiteList = "1234567890 -+%"
-    for (char in jumps) if (char !in whiteList) return -1
-    val parts = jumps.split(" ").filter { it != "" }
-    var max = -1
-    if (parts.size % 2 == 1 || parts.isEmpty()) return -1
-    return try {
-        for (i in 0 until parts.size step 2)
-            if (parts[i].toInt() > max && parts[i + 1].last() == '+') max = parts[i].toInt()
-        max
+    val parts = jumps.split(" ")
+    var maxResult = -1
+    for (part in 1..parts.size - 1 step 2) {
+        val maxOfParts = parts[part - 1].toInt()
+        if ('+' in parts[part] && maxResult < maxOfParts) maxResult = maxOfParts
     }
-    catch (e: NumberFormatException) { -1 }
+    return maxResult
 }
 
 /**
@@ -176,21 +187,20 @@ fun bestHighJump(jumps: String): Int {
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
 fun plusMinus(expression: String): Int {
-    val whiteList = "1234567890 -+"
-    for (char in expression) if (char !in whiteList) throw IllegalArgumentException()
-    val parts = expression.split(" ").filter { it != "" }
-    if (parts.isEmpty()) throw IllegalArgumentException()
     try {
-        var sum = parts[0].toInt()
-        for (i in 1 until parts.size step 2)  when {
-            parts[i + 1].toInt() < 0 -> throw IllegalArgumentException()
-            parts[i] == "+" -> sum += parts[i + 1].toInt()
-            parts[i] == "-" -> sum -= parts[i + 1].toInt()
-            else -> throw IllegalArgumentException()
+        val parts = expression.split(" ")
+        var result = parts[0].toInt()
+        for (i in 2..parts.size step 2) {
+            if (parts[i - 1] == "+") {
+                result += parts[i].toInt()
+            } else if (parts[i - 1] == "-") {
+                result -= parts[i].toInt()
+            }
         }
-        return sum
+        return result
+    } catch (e: NumberFormatException) {
+        throw  IllegalArgumentException(e)
     }
-    catch (e: NumberFormatException) { throw IllegalArgumentException() }
 }
 
 /**
@@ -229,13 +239,16 @@ fun mostExpensive(description: String): String {
     var max = -1.0
     var name = ""
     return try {
-        for (i in 0 until parts.size) if (parts[i].split(" ")[1].toDouble() > max) {
-            max = parts[i].split(" ")[1].toDouble()
-            name = parts[i].split(" ")[0]
+        for (i in 0 until parts.size) {
+            if (parts[i].split(" ").size != 2) return ""; if (parts[i].split(" ")[1].toDouble() > max) {
+                max = parts[i].split(" ")[1].toDouble()
+                name = parts[i].split(" ")[0]
+            }
         }
         name
+    } catch (e: NumberFormatException) {
+        ""
     }
-    catch (e: NumberFormatException) { "" }
 }
 
 /**
