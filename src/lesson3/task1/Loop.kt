@@ -254,3 +254,4 @@ fun fibSequenceDigit(n: Int): Int {
     }
     return seq % 10
 }
+
