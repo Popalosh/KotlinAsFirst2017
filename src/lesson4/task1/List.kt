@@ -258,7 +258,7 @@ fun convert(n: Int, base: Int): List<Int> {
  * Например: n = 100, base = 4 -> 1210, n = 250, base = 14 -> 13c
  */
 fun convertToString(n: Int, base: Int): String {
-    val newN = convert(n, base).map { if (it>9) (it+87).toChar() else it }
+    val newN = convert(n, base).map { if (it>9) (it+87).toChar() else it } // Сделал через ASCII таблицу
     return newN.joinToString("")
 }
 
