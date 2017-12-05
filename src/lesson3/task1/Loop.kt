@@ -25,7 +25,7 @@ fun factorial(n: Int): Double {
  */
 fun isPrime(n: Int): Boolean {
     if (n < 2) return false
-    for (m in 2..Math.sqrt(n.toDouble()).toInt()) {
+    for (m in 2..sqrt(n.toDouble()).toInt()) {
         if (n % m == 0) return false
     }
     return true
@@ -65,13 +65,13 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  * Например, число 1 содержит 1 цифру, 456 -- 3 цифры, 65536 -- 5 цифр.
  */
 fun digitNumber(n: Int): Int {
-    var res = 0
+    var result = 0
     var num = abs(n)
     do {
         num /= 10
-        res++
+        result++
     } while (num > 0)
-    return res
+    return result
 }
 
 /**
@@ -114,7 +114,7 @@ fun lcm(m: Int, n: Int): Int {
 fun minDivisor(n: Int): Int {
     if (isPrime(n))
         return n
-    for (i in 2..(sqrt(n.toDouble())).toInt()) {
+    for (i in 2..round(sqrt(n.toDouble())).toInt()) {
         if (n % i == 0)
             return i
     }
@@ -126,9 +126,7 @@ fun minDivisor(n: Int): Int {
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
-fun maxDivisor(n: Int): Int {
-    return n / minDivisor(n)
-}
+fun maxDivisor(n: Int): Int = n / minDivisor(n)
 
 /**
  * Простая
@@ -137,9 +135,7 @@ fun maxDivisor(n: Int): Int {
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean {
-    return lcm(m, n) == m * n
-}
+fun isCoPrime(m: Int, n: Int): Boolean = lcm(m, n) == m * n
 
 /**
  * Простая
@@ -179,14 +175,14 @@ fun cos(x: Double, eps: Double): Double = TODO()
  * Не использовать строки при решении задачи.
  */
 fun revert(n: Int): Int {
-    var res = 0
-    var dig = n
+    var result = 0
+    var digit = n
     do {
-        res *= 10
-        res += dig % 10
-        dig /= 10
-    } while (dig > 0)
-    return res
+        result *= 10
+        result += digit % 10
+        digit /= 10
+    } while (digit > 0)
+    return result
 }
 
 /**
@@ -196,9 +192,7 @@ fun revert(n: Int): Int {
  * первая цифра равна последней, вторая -- предпоследней и так далее.
  * 15751 -- палиндром, 3653 -- нет.
  */
-fun isPalindrome(n: Int): Boolean {
-    return revert(n) == n
-}
+fun isPalindrome(n: Int): Boolean = revert(n) == n
 
 /**
  * Средняя
@@ -206,9 +200,7 @@ fun isPalindrome(n: Int): Boolean {
  * Для заданного числа n определить, содержит ли оно различающиеся цифры.
  * Например, 54 и 323 состоят из разных цифр, а 111 и 0 из одинаковых.
  */
-fun hasDifferentDigits(n: Int): Boolean {
-    return digitCountInNumber(n, (n % 10)) != digitNumber(n)
-}
+fun hasDifferentDigits(n: Int): Boolean = digitCountInNumber(n, (n % 10)) != digitNumber(n)
 
 /**
  * Сложная
@@ -220,11 +212,11 @@ fun hasDifferentDigits(n: Int): Boolean {
 fun squareSequenceDigit(n: Int): Int {
     var number = 0
     var count = 0
-    var iter = 1.0
+    var iteration = 1.0
     while (count < n) {
-        number = sqr(iter).toInt()
-        count += digitNumber(sqr(iter).toInt())
-        iter++
+        number = sqr(iteration).toInt()
+        count += digitNumber(sqr(iteration).toInt())
+        iteration++
     }
     while (count != n) {
         count--
@@ -236,16 +228,18 @@ fun squareSequenceDigit(n: Int): Int {
 /**
  * Сложная
  *
+ * Найти n-ю цифру последовательности из чисел Фибоначчи (см. функцию fib выше):
+ * 1123581321345589144...
  * Например, 2-я цифра равна 1, 9-я 2, 14-я 5.
  */
 fun fibSequenceDigit(n: Int): Int {
     var seq = 0
-    var iter = 1
+    var iteration = 1
     var count = 0
     while (count < n) {
-        seq = fib(iter)
-        count += digitNumber(fib(iter))
-        iter++
+        seq = fib(iteration)
+        count += digitNumber(fib(iteration))
+        iteration++
     }
 
     while (count != n) {
