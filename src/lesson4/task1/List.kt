@@ -1,4 +1,5 @@
 @file:Suppress("UNUSED_PARAMETER")
+
 package lesson4.task1
 
 import lesson1.task1.discriminant
@@ -223,7 +224,6 @@ fun factorize(n: Int): List<Int> {
 }
 
 
-
 /**
  * Сложная
  *
@@ -260,8 +260,7 @@ fun convert(n: Int, base: Int): List<Int> {
  * Например: n = 100, base = 4 -> 1210, n = 250, base = 14 -> 13c
  */
 fun convertToString(n: Int, base: Int): String {
-    val digitName = listOf('0'..'z')
-    val newN = convert(n, base).map { digitName[it] }
+    val newN = convert(n, base).map { if (it>9) (it+87).toChar() else it }
     return newN.joinToString("")
 }
 
