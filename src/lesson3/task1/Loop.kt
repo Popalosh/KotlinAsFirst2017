@@ -83,7 +83,7 @@ fun digitNumber(n: Int): Int {
 fun fib(n: Int): Int {
     val a = 1.0 / 2.0
     val b = sqrt(5.0) / 2.0
-    return (((pow(a + b, n.toDouble()) - pow(a - b, n.toDouble())) / sqrt(5.0)).toInt())
+    return (round((pow(a + b, n.toDouble()) - pow(a - b, n.toDouble())) / sqrt(5.0)).toInt())
 }
 
 
