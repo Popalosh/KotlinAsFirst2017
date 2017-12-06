@@ -177,11 +177,11 @@ fun times(a: List<Double>, b: List<Double>): Double {
  * Значение пустого многочлена равно 0.0 при любом x.
  */
 fun polynom(p: List<Double>, x: Double): Double {
-    var res = 0.0
+    var result = 0.0
     for (i in 0 until p.size) {
-        res += p[i] * pow(x, i.toDouble())
+        result += p[i] * pow(x, i.toDouble())
     }
-    return res
+    return result
 }
 
 /**
@@ -213,14 +213,14 @@ fun accumulate(list: MutableList<Double>): MutableList<Double> {
 fun factorize(n: Int): List<Int> {
     var count = 2
     var num = n
-    val res = mutableListOf<Int>()
+    val result = mutableListOf<Int>()
     while (count <= sqr(num.toDouble())) {
         if (num % count == 0) {
-            res += count
+            result += count
             num /= count
         } else count += 1
     }
-    return res
+    return result
 }
 
 
@@ -240,13 +240,13 @@ fun factorizeToString(n: Int): String = factorize(n).joinToString(separator = "*
  * например: n = 100, base = 4 -> (1, 2, 1, 0) или n = 250, base = 14 -> (1, 3, 12)
  */
 fun convert(n: Int, base: Int): List<Int> {
-    val res = mutableListOf<Int>()
+    val result = mutableListOf<Int>()
     var num = n
     while (num >= base) {
-        res += (num % base)
+        result += (num % base)
         num = (num - num % base) / base
     }
-    return (res + num).reversed()
+    return (result + num).reversed()
 }
 
 /**
@@ -258,7 +258,7 @@ fun convert(n: Int, base: Int): List<Int> {
  * Например: n = 100, base = 4 -> 1210, n = 250, base = 14 -> 13c
  */
 fun convertToString(n: Int, base: Int): String {
-    val newN = convert(n, base).map { if (it>9) (it+87).toChar() else it } // Сделал через ASCII таблицу
+    val newN = convert(n, base).map { if (it > 9) (it + 87).toChar() else it } // Сделал через ASCII таблицу
     return newN.joinToString("")
 }
 
@@ -270,13 +270,13 @@ fun convertToString(n: Int, base: Int): String {
  * Например: digits = (1, 3, 12), base = 14 -> 250
  */
 fun decimal(digits: List<Int>, base: Int): Int {
-    var res = 0
+    var result = 0
     var p = 0
     for (i in (digits.size - 1) downTo 0) {
-        res += digits[i] * pow(base.toDouble(), p.toDouble()).toInt()
+        result += digits[i] * pow(base.toDouble(), p.toDouble()).toInt()
         p++
     }
-    return res
+    return result
 }
 
 /**
@@ -307,17 +307,21 @@ fun decimalFromString(str: String, base: Int): Int {
  */
 fun roman(n: Int): String {
     var number = n
-    var i = 0
-    val romanIntList = mutableListOf<String>()
-    val intToString = listOf(1000 to "M", 900 to "CM", 500 to "D", 400 to "CD", 100 to "C", 90 to "XC", 50 to "L",
+    var result = ""
+    val intToString = mapOf(1000 to "M", 900 to "CM", 500 to "D", 400 to "CD", 100 to "C", 90 to "XC", 50 to "L",
             40 to "XL", 10 to "X", 9 to "IX", 5 to "V", 4 to "IV", 1 to "I")
-    while (number > 0) {
-        if (intToString[i].first <= number) {
-            number -= intToString[i].first
-            romanIntList.add(intToString[i].second)
-        } else i++
+    for (element in intToString) {
+        if (element.key > number) {
+            continue
+        } else if (number == 0) return result
+        else {
+            while (element.key <= number) {
+                number -= element.key
+                result += element.value
+            }
+        }
     }
-    return romanIntList.joinToString(separator = "")
+    return result
 }
 
 /**
