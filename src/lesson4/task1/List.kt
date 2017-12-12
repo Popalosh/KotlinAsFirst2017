@@ -3,7 +3,7 @@
 package lesson4.task1
 
 import lesson1.task1.discriminant
-import lesson1.task1.sqr
+import java.lang.StringBuilder
 import lesson3.task1.minDivisor
 import java.lang.Math.pow
 import java.lang.Math.sqrt
@@ -210,19 +210,16 @@ fun accumulate(list: MutableList<Double>): MutableList<Double> {
  * Результат разложения вернуть в виде списка множителей, например 75 -> (3, 5, 5).
  * Множители в списке должны располагаться по возрастанию.
  */
-fun factorize(n: Int): List<Int> {
-    var count = 2
-    var num = n
-    val result = mutableListOf<Int>()
-    while (count <= sqr(num.toDouble())) {
-        if (num % count == 0) {
-            result += count
-            num /= count
-        } else count += 1
-    }
-    return result
-}
 
+fun factorize(n: Int): List<Int> {
+    val multipliers = mutableListOf<Int>()
+    var newN = n
+    while (newN > 1) {
+        multipliers.add(minDivisor(newN))
+        newN /= multipliers.last()
+    }
+    return multipliers
+}
 
 /**
  * Сложная
@@ -258,8 +255,15 @@ fun convert(n: Int, base: Int): List<Int> {
  * Например: n = 100, base = 4 -> 1210, n = 250, base = 14 -> 13c
  */
 fun convertToString(n: Int, base: Int): String {
-    val newN = convert(n, base).map { if (it > 9) (it + 87).toChar() else it } // Сделал через ASCII таблицу
-    return newN.joinToString("")
+    val list = convert(n, base)
+    val letterCode = 87
+    val result = StringBuilder()
+    for (i in 0 until list.size) {
+        if (list[i] > 9)
+            result.append((list[i] + letterCode).toChar())
+        else result.append(list[i])
+    }
+    return result.toString()
 }
 
 /**
@@ -307,21 +311,20 @@ fun decimalFromString(str: String, base: Int): Int {
  */
 fun roman(n: Int): String {
     var number = n
-    var result = ""
+    val result = StringBuilder("")
     val intToString = mapOf(1000 to "M", 900 to "CM", 500 to "D", 400 to "CD", 100 to "C", 90 to "XC", 50 to "L",
             40 to "XL", 10 to "X", 9 to "IX", 5 to "V", 4 to "IV", 1 to "I")
     for (element in intToString) {
         if (element.key > number) {
             continue
-        } else if (number == 0) return result
-        else {
+        } else if (number != 0) {
             while (element.key <= number) {
                 number -= element.key
-                result += element.value
+                result.append(element.value)
             }
         }
     }
-    return result
+    return result.toString()
 }
 
 /**
@@ -355,13 +358,17 @@ fun partOfRussian(middle: Int, unit: List<String>): List<String> {
 fun russian(n: Int): String {
     val result = mutableListOf<String>()
     val part1 = n / 1000
+    val a = ((part1 % 10 == 1) && (part1 / 10 % 10 != 1))
+    val b = (part1 % 100 / 10 != 1 && (part1 % 10 in 2..4))
     if (part1 > 0) {
         result.addAll(partOfRussian(part1, units))
-        if ((part1 % 10 == 1) && (part1 / 10 % 10 != 1)) result.add("тысяча")
-        else if (!(part1 % 100 / 10 == 1) && (part1 % 10 == 2 || part1 % 10 == 3 || part1 % 10 == 4)) result.add("тысячи")
-        else result.add("тысяч")
+        when { a -> result.add("тысяча")
+            !a && b -> result.add("тысячи")
+            !a && !b -> result.add("тысяч")
+        }
     }
     val part2 = n % 1000
     result.addAll(partOfRussian(part2, units2))
     return result.joinToString(separator = " ")
 }
+
