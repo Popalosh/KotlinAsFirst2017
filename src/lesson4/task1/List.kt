@@ -256,11 +256,10 @@ fun convert(n: Int, base: Int): List<Int> {
  */
 fun convertToString(n: Int, base: Int): String {
     val list = convert(n, base)
-    val letterCode = 87
     val result = StringBuilder()
     for (i in 0 until list.size) {
         if (list[i] > 9)
-            result.append((list[i] + letterCode).toChar())
+            result.append((list[i] + 87).toChar())
         else result.append(list[i])
     }
     return result.toString()
