@@ -1,4 +1,5 @@
 @file:Suppress("UNUSED_PARAMETER")
+
 package lesson6.task2
 
 /**
@@ -21,7 +22,21 @@ data class Square(val column: Int, val row: Int) {
      * В нотации, колонки обозначаются латинскими буквами от a до h, а ряды -- цифрами от 1 до 8.
      * Для клетки не в пределах доски вернуть пустую строку
      */
-    fun notation(): String = TODO()
+    fun notation(): String // = if (!inside()) "" else (column + 96).toChar() + "$row"
+    {
+        if (!inside()) return ""
+        else {
+            val conformity = mapOf(1 to "a", 2 to "b", 3 to "c", 4 to "d", 5 to "e",
+                    6 to "f", 7 to "g", 8 to "h")
+            for (i in conformity) {
+                if (column == i.key) {
+                    val tmp = i.value
+                    return "$tmp$row"
+                }
+            }
+        }
+        return ""
+    }
 }
 
 /**
@@ -31,7 +46,10 @@ data class Square(val column: Int, val row: Int) {
  * В нотации, колонки обозначаются латинскими буквами от a до h, а ряды -- цифрами от 1 до 8.
  * Если нотация некорректна, бросить IllegalArgumentException
  */
-fun square(notation: String): Square = TODO()
+fun square(notation: String): Square = when {
+    notation.length != 2 || notation[0] !in 'a'..'h' || notation[1] !in '1'..'8' -> throw IllegalArgumentException()
+    else -> Square((notation[0].toInt() - 96), notation[1].toString().toInt())
+}
 
 /**
  * Простая
@@ -39,7 +57,7 @@ fun square(notation: String): Square = TODO()
  * Определить число ходов, за которое шахматная ладья пройдёт из клетки start в клетку end.
  * Шахматная ладья может за один ход переместиться на любую другую клетку
  * по вертикали или горизонтали.
- * Ниже точками выделены возможные ходы ладьи, а крестиками -- невозможные:
+ * Ниже точками выделены возможные ходы ладьи, а кре стиками -- невозможные:
  *
  * xx.xxххх
  * xх.хxххх
@@ -56,7 +74,13 @@ fun square(notation: String): Square = TODO()
  * Пример: rookMoveNumber(Square(3, 1), Square(6, 3)) = 2
  * Ладья может пройти через клетку (3, 3) или через клетку (6, 1) к клетке (6, 3).
  */
-fun rookMoveNumber(start: Square, end: Square): Int = TODO()
+fun rookMoveNumber(start: Square, end: Square): Int =
+        when {
+            (!start.inside() || !end.inside()) -> throw IllegalArgumentException()
+            start == end -> 0
+            start.row == end.row || start.column == end.column -> 1
+            else -> 2
+        }
 
 /**
  * Средняя
@@ -72,7 +96,12 @@ fun rookMoveNumber(start: Square, end: Square): Int = TODO()
  *          rookTrajectory(Square(3, 5), Square(8, 5)) = listOf(Square(3, 5), Square(8, 5))
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun rookTrajectory(start: Square, end: Square): List<Square> = TODO()
+fun rookTrajectory(start: Square, end: Square): List<Square> =
+        when {
+            rookMoveNumber(start, end) == 0 -> listOf(start)
+            rookMoveNumber(start, end) == 1 -> listOf(start, end)
+            else -> listOf(start, Square(start.column, end.row), end)
+        }
 
 /**
  * Простая
@@ -203,3 +232,4 @@ fun knightMoveNumber(start: Square, end: Square): Int = TODO()
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
 fun knightTrajectory(start: Square, end: Square): List<Square> = TODO()
+
