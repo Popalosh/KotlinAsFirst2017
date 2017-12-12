@@ -2,6 +2,8 @@
 
 package lesson6.task2
 
+import lesson4.task1.abs
+
 /**
  * Клетка шахматной доски. Шахматная доска квадратная и имеет 8 х 8 клеток.
  * Поэтому, обе координаты клетки (горизонталь row, вертикаль column) могут находиться в пределах от 1 до 8.
@@ -126,7 +128,13 @@ fun rookTrajectory(start: Square, end: Square): List<Square> =
  * Примеры: bishopMoveNumber(Square(3, 1), Square(6, 3)) = -1; bishopMoveNumber(Square(3, 1), Square(3, 7)) = 2.
  * Слон может пройти через клетку (6, 4) к клетке (3, 7).
  */
-fun bishopMoveNumber(start: Square, end: Square): Int = TODO()
+fun bishopMoveNumber(start: Square, end: Square): Int = when {
+    !(start.inside() && end.inside()) -> throw IllegalArgumentException()
+    (start.column + start.row - end.column - end.row) % 2 != 0 -> -1
+    start == end -> 0
+    Math.abs(start.column - end.column) == Math.abs(start.row - end.row) -> 1
+    else -> 2
+}
 
 /**
  * Сложная
@@ -146,7 +154,20 @@ fun bishopMoveNumber(start: Square, end: Square): Int = TODO()
  *          bishopTrajectory(Square(1, 3), Square(6, 8)) = listOf(Square(1, 3), Square(6, 8))
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun bishopTrajectory(start: Square, end: Square): List<Square> = TODO()
+fun bishopTrajectory(start: Square, end: Square): List<Square> =
+        when (bishopMoveNumber(start, end)) {
+            -1 -> listOf()
+            0 -> listOf(start)
+            1 -> listOf(start, end)
+            else -> {
+                val column = (start.column + end.row - start.row + end.column) / 2
+                val row = end.row - (start.column + end.row - start.row - end.column) / 2
+                val averageSquare = if (row in 1..8 && column in 1..8) Square(column, row)
+                else Square(end.column - row + start.row, end.row - row + start.row)
+                listOf(start, averageSquare, end)
+            }
+        }
+
 
 /**
  * Средняя
@@ -184,7 +205,19 @@ fun kingMoveNumber(start: Square, end: Square): Int = TODO()
  *          kingTrajectory(Square(3, 5), Square(6, 2)) = listOf(Square(3, 5), Square(4, 4), Square(5, 3), Square(6, 2))
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun kingTrajectory(start: Square, end: Square): List<Square> = TODO()
+fun kingTrajectory(start: Square, end: Square): List<Square> {
+    val points = mutableListOf(start)
+    var columnStep = if (end.column > start.column) 1 else -1
+    var rowStep = if (end.row > start.row) 1 else -1
+    while (end.row != points.last().row && end.column != points.last().column) {
+        points.add(Square(points.last().column + columnStep, points.last().row + rowStep))
+    }
+    if (end.row == points.last().row) rowStep = 0 else columnStep = 0
+    while (points.last() != end) {
+        points.add(Square(points.last().column + columnStep, points.last().row + rowStep))
+    }
+    return points
+}
 
 /**
  * Сложная
