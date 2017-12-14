@@ -357,17 +357,16 @@ fun partOfRussian(middle: Int, unit: List<String>): List<String> {
 fun russian(n: Int): String {
     val result = mutableListOf<String>()
     val part1 = n / 1000
-    val a = ((part1 % 10 == 1) && (part1 / 10 % 10 != 1))
-    val b = (part1 % 100 / 10 != 1 && (part1 % 10 in 2..4))
+    val condition1 = ((part1 % 10 == 1) && (part1 / 10 % 10 != 1))
+    val condition2 = (part1 % 100 / 10 != 1 && (part1 % 10 in 2..4))
     if (part1 > 0) {
         result.addAll(partOfRussian(part1, units))
-        when { a -> result.add("тысяча")
-            !a && b -> result.add("тысячи")
-            !a && !b -> result.add("тысяч")
+        when { condition1 -> result.add("тысяча")
+            !condition1 && condition2 -> result.add("тысячи")
+            !condition1 && !condition2 -> result.add("тысяч")
         }
     }
     val part2 = n % 1000
     result.addAll(partOfRussian(part2, units2))
     return result.joinToString(separator = " ")
 }
-
