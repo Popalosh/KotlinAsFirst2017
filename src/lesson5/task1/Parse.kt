@@ -92,18 +92,18 @@ fun dateStrToDigit(str: String): String {
  * При неверном формате входной строки вернуть пустую строку
  */
 fun dateDigitToStr(digital: String): String {
-    try {
+    return try {
         val date = digital.split(".")
         if (date.size == 3) {
             val day = date[0].toInt()
             val month = date[1].toInt()
             if (day in 1..31 && month in 1..12)
-                return ("$day ${months[month - 1]} ${date[2]}")
+                ("$day ${months[month - 1]} ${date[2]}")
             else
-                return ""
-        } else return ""
+                ""
+        } else ""
     } catch (e: NumberFormatException) {
-        return ""
+        ""
     }
 }
 
@@ -120,17 +120,20 @@ fun dateDigitToStr(digital: String): String {
  * Все символы в номере, кроме цифр, пробелов и +-(), считать недопустимыми.
  * При неверном формате вернуть пустую строку
  */
+
 fun flattenPhoneNumber(phone: String): String {
-    var numbsInPhone = 0
+    val number = '0'..'9'
+    val whitelist = " ()-+"
+    if (phone.isEmpty() || phone.indexOf('+') > 0) return ""
+
     for (i in phone)
-        if (i in '0'..'9') numbsInPhone++
-    if (phone.isEmpty() || phone.indexOf('+') > 0 || numbsInPhone == 0) return ""
-    val number = mutableListOf<Char>()
-    for (char in phone) {
-        if (char in '0'..'9' || char == '+') number += char
-        else if (char != '(' && char != ')' && char != ' ' && char != '-') return ""
+        if (i !in number && i !in whitelist) return ""
+    var result = ""
+    for (element in phone) {
+        if (element in number || element == '+') result += element
+        else if (element !in whitelist) return ""
     }
-    return number.joinToString("")
+    return result
 }
 
 /**
@@ -148,11 +151,13 @@ fun bestLongJump(jumps: String): Int {
     val list = jumps.trim().split(" ")
     var maxResult = -1
     for (element in list) {
-        if (element.isNotEmpty() && element[0] in '0'..'9') {
-            if (element.toInt() > maxResult)
+        try {
+            if (element.isNotEmpty() && element.toInt() > maxResult)
                 maxResult = element.toInt()
-        } else if (element == " " || element == "-" || element == "%" || element == "") continue
-        else return -1
+        } catch (e: NumberFormatException) {
+            if (element == " " || element == "-" || element == "%" || element == "") continue
+            else return -1
+        }
     }
     return maxResult
 }
@@ -196,6 +201,7 @@ fun plusMinus(expression: String): Int {
             } else if (parts[i - 1] == "-") {
                 result -= parts[i].toInt()
             }
+            else throw IllegalArgumentException()
         }
         return result
     } catch (e: NumberFormatException) {
@@ -233,22 +239,26 @@ fun firstDuplicateIndex(str: String): Int {
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть положительными
  */
+
 fun mostExpensive(description: String): String {
-    val parts = description.split("; ")
-    if (parts.isEmpty() || 2 * parts.size != description.split(" ").size) return ""
-    var max = -1.0
-    var name = ""
-    return try {
-        for (i in 0 until parts.size) {
-            if (parts[i].split(" ").size != 2) return ""; if (parts[i].split(" ")[1].toDouble() > max) {
-                max = parts[i].split(" ")[1].toDouble()
-                name = parts[i].split(" ")[0]
+    if (description.isEmpty()) return ""
+    var maxCost = 0.0
+    var nameMaxCost = ""
+    try {
+        val parts = description.split("; ")
+        for (el in parts) {
+            val product = el.split(" ")
+            if (product.size != 2) return ""
+            val maxOfParts = product[1].toDouble()
+            if (maxOfParts >= maxCost) {
+                maxCost = maxOfParts
+                nameMaxCost = product[0]
             }
         }
-        name
     } catch (e: NumberFormatException) {
-        ""
+        return ""
     }
+    return nameMaxCost
 }
 
 /**
