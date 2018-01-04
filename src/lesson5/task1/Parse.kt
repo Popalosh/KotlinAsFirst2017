@@ -134,7 +134,7 @@ fun flattenPhoneNumber(phone: String): String {
             when {
                 secondCondition -> if (thirdCondition) return ""
                 else result.append(element)
-                forthCondition -> return result.toString()
+                forthCondition -> return ""
             }
         }
     }
@@ -278,7 +278,6 @@ fun mostExpensive(description: String): String {
  * Вернуть -1, если roman не является корректным римским числом
  */
 fun fromRoman(roman: String): Int = TODO()
-
 
 
 /**
