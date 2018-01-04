@@ -155,7 +155,6 @@ class Line private constructor(val b: Double, val angle: Double) {
      * Для этого необходимо составить и решить систему из двух уравнений (каждое для своей прямой)
      */
     fun crossPoint(other: Line): Point {
-        if (angle == other.angle) println("Прямые не пересекаются")
         val x = (other.b * cos(angle) - b * cos(other.angle)) / sin(angle - other.angle)
         val y = (b * sin(other.angle) - other.b * sin(angle)) / sin(other.angle - angle)
         return Point(x, y)
