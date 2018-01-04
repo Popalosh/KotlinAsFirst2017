@@ -278,23 +278,7 @@ fun mostExpensive(description: String): String {
  * Вернуть -1, если roman не является корректным римским числом
  */
 fun fromRoman(roman: String): Int = TODO()
-//{
-//    val newRoman = StringBuilder (roman)
-//    val romansSingle = mapOf(1 to "I", 5 to "V", 10 to "X", 50 to "L", 100 to "C", 500 to "D", 1000 to "M")
-//    val romansPairs = mapOf(4 to "IV", 9 to "IX", 40 to "XL", 90 to "XC", 400 to "CD", 900 to "CM")
-//    val result = StringBuilder()
-//    for (i in 0..newRoman.length)
-//    for (pairs in romansPairs) {
-//        if (pairs.value in newRoman) {
-//            result.append(pairs.key)
-//            newRoman.toString()
-//            newRoman -= pairs.value
-//            for (single in romansSingle) {
-//                if s
-//            }
-//        }
-//    }
-//}
+
 
 
 /**
