@@ -71,14 +71,14 @@ fun main(args: Array<String>) {
 fun dateStrToDigit(str: String): String {
     val date = str.split(" ")
     if (date.size == 3) {
-        try {
+        return try {
             val day = date[0].toInt()
             if ((date[1] in months) && (day in 1..31)) {
                 val month = months.indexOf(date[1]) + 1
-                return String.format("%02d.%02d.%d", day, month, date[2].toInt())
-            } else return ""
+                String.format("%02d.%02d.%d", day, month, date[2].toInt())
+            } else ""
         } catch (e: NumberFormatException) {
-            return ""
+            ""
         }
     } else return ""
 }
@@ -92,21 +92,20 @@ fun dateStrToDigit(str: String): String {
  * При неверном формате входной строки вернуть пустую строку
  */
 fun dateDigitToStr(digital: String): String {
-    return try {
-        val date = digital.split(".")
-        if (date.size == 3) {
+    val date = digital.split(".")
+    if (date.size == 3) {
+        return try {
             val day = date[0].toInt()
             val month = date[1].toInt()
             if (day in 1..31 && month in 1..12)
                 ("$day ${months[month - 1]} ${date[2]}")
             else
                 ""
-        } else ""
-    } catch (e: NumberFormatException) {
-        ""
-    }
+        } catch (e: NumberFormatException) {
+            ""
+        }
+    } else return ""
 }
-
 
 /**
  * Средняя
@@ -123,18 +122,25 @@ fun dateDigitToStr(digital: String): String {
 
 fun flattenPhoneNumber(phone: String): String {
     val number = '0'..'9'
-    val whitelist = " ()-+"
-    if (phone.isEmpty() || phone.indexOf('+') > 0) return ""
-
-    for (i in phone)
-        if (i !in number && i !in whitelist) return ""
-    var result = ""
-    for (element in phone) {
-        if (element in number || element == '+') result += element
-        else if (element !in whitelist) return ""
+    val whitelist = " ()-"
+    val result = StringBuilder()
+    val firstCondition = phone.isEmpty() || phone.indexOf('+') > 0
+    when {
+        firstCondition -> return result.toString()
+        else -> for (element in phone) {
+            val secondCondition = element in number || element == '+'
+            val thirdCondition = result.indexOf('+', 1) > 0
+            val forthCondition = element !in whitelist
+            when {
+                secondCondition -> if (thirdCondition) return ""
+                else result.append(element)
+                forthCondition -> return result.toString()
+            }
+        }
     }
-    return result
+    return result.toString()
 }
+
 
 /**
  * Средняя
@@ -196,12 +202,11 @@ fun plusMinus(expression: String): Int {
         val parts = expression.split(" ")
         var result = parts[0].toInt()
         for (i in 2..parts.size step 2) {
-            if (parts[i - 1] == "+") {
+            if (parts[i - 1] == "+" && parts[i] != "+") {
                 result += parts[i].toInt()
-            } else if (parts[i - 1] == "-") {
+            } else if (parts[i - 1] == "-" && parts[i] != "-") {
                 result -= parts[i].toInt()
-            }
-            else throw IllegalArgumentException()
+            } else throw IllegalArgumentException()
         }
         return result
     } catch (e: NumberFormatException) {
@@ -273,6 +278,24 @@ fun mostExpensive(description: String): String {
  * Вернуть -1, если roman не является корректным римским числом
  */
 fun fromRoman(roman: String): Int = TODO()
+//{
+//    val newRoman = StringBuilder (roman)
+//    val romansSingle = mapOf(1 to "I", 5 to "V", 10 to "X", 50 to "L", 100 to "C", 500 to "D", 1000 to "M")
+//    val romansPairs = mapOf(4 to "IV", 9 to "IX", 40 to "XL", 90 to "XC", 400 to "CD", 900 to "CM")
+//    val result = StringBuilder()
+//    for (i in 0..newRoman.length)
+//    for (pairs in romansPairs) {
+//        if (pairs.value in newRoman) {
+//            result.append(pairs.key)
+//            newRoman.toString()
+//            newRoman -= pairs.value
+//            for (single in romansSingle) {
+//                if s
+//            }
+//        }
+//    }
+//}
+
 
 /**
  * Очень сложная
@@ -311,4 +334,5 @@ fun fromRoman(roman: String): Int = TODO()
  *
  */
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> = TODO()
+
 

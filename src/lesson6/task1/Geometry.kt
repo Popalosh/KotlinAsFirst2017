@@ -85,7 +85,7 @@ data class Circle(val center: Point, val radius: Double) {
      *
      * Вернуть true, если и только если окружность содержит данную точку НА себе или ВНУТРИ себя
      */
-    fun contains(p: Point): Boolean = center.distance(p) <= radius + pow(10.0, -10.0)
+    fun contains(p: Point): Boolean = center.distance(p) <= radius
 }
 
 /**
@@ -114,7 +114,7 @@ fun diameter(vararg points: Point): Segment {
     var maxDistance = 0.0
     var maxSegment = Segment(points[0], points[0])
     for (first in 0 until points.size)
-        for (second in 1 until points.size) {
+        for (second in first+1 until points.size) {
             val distance = points[first].distance(points[second])
             if (first != second && distance > maxDistance) {
                 maxDistance = distance
@@ -155,6 +155,7 @@ class Line private constructor(val b: Double, val angle: Double) {
      * Для этого необходимо составить и решить систему из двух уравнений (каждое для своей прямой)
      */
     fun crossPoint(other: Line): Point {
+        if (angle == other.angle) println("Прямые не пересекаются")
         val x = (other.b * cos(angle) - b * cos(other.angle)) / sin(angle - other.angle)
         val y = (b * sin(other.angle) - other.b * sin(angle)) / sin(other.angle - angle)
         return Point(x, y)

@@ -1,7 +1,6 @@
 @file:Suppress("UNUSED_PARAMETER")
 package lesson1.task1
 
-import lesson3.task1.revert
 import java.lang.Math.*
 
 /**
