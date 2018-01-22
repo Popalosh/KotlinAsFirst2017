@@ -59,7 +59,28 @@ operator fun Matrix<Int>.plus(other: Matrix<Int>): Matrix<Int> {
  * 10 11 12  5
  *  9  8  7  6
  */
-fun generateSpiral(height: Int, width: Int): Matrix<Int> = TODO()
+fun generateSpiral(height: Int, width: Int): Matrix<Int> {
+    val result = createMatrix(height, width, 0)
+    var passedCircles = 0
+    var counter = 0
+    val countLimit = height * width
+    do {
+        for (column in passedCircles until width - passedCircles) {
+            result[passedCircles, column] = ++counter
+        }
+        for (row in 1 + passedCircles until height - passedCircles) {
+            result[row, width - 1 - passedCircles] = ++counter
+        }
+        for (column in width - 2 - passedCircles downTo 0 + passedCircles) {
+            if (counter < countLimit) result[height - 1 - passedCircles, column] = ++counter
+        }
+        for (row in height - 2 - passedCircles downTo 1 + passedCircles) {
+            if (counter < countLimit) result[row, 0 + passedCircles] = ++counter
+        }
+        passedCircles++
+    } while (counter < countLimit)
+    return result
+}
 
 /**
  * Сложная
