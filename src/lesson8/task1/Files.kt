@@ -188,35 +188,31 @@ fun centerFile(inputName: String, outputName: String) {
 
 fun alignFileByWidth(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
-    val ansList = mutableListOf<String>()
-    File(inputName).readLines().forEach { ansList.add(it.trim()) }
+    val list = mutableListOf<String>()
+    for (line in File(inputName).readLines()) {
+        list.add(line.trim())
+    }
     val maxLength = maxLength(inputName)
-
-    for (line in ansList) {
-
-        if (line.isEmpty()) writer.newLine()
-
-        else {
-            val ansLine = StringBuilder(line)
-            var wordsInLine = line.split(Regex( "\\s+"))
-
-
+    for (line in list) {
+        if (line.isEmpty()) {
+            writer.newLine()
+        } else {
+            val curLine = StringBuilder(line)
+            var wordsInLine = line.split(Regex("\\s+"))
             if (wordsInLine.size > 1) {
                 var ind = 0
                 var count = 0
                 var i = 0
                 while (i < wordsInLine.size) {
                     if (wordsInLine[i] == "") {
-                        ansLine.deleteCharAt(ind)
+                        curLine.deleteCharAt(ind)
                         wordsInLine -= wordsInLine[i]
                     } else {
                         ind += wordsInLine[i].length + 1
                         i++
                     }
                 }
-
-                val length = ansLine.length
-
+                val length = curLine.length
                 for (i in 0 until maxLength - length) {
                     if (i % (wordsInLine.size - 1) == 0) {
                         count++
@@ -224,19 +220,16 @@ fun alignFileByWidth(inputName: String, outputName: String) {
                     }
                     val part = wordsInLine[i % (wordsInLine.size - 1)]
                     ind += part.length
-                    ansLine.insert(ind, ' ')
+                    curLine.insert(ind, ' ')
                     ind += count + 1
                 }
-
-
             }
-            writer.write(ansLine.toString())
+            writer.write(curLine.toString())
             writer.newLine()
         }
     }
     writer.close()
 }
-
 
 /**
  * Средняя
