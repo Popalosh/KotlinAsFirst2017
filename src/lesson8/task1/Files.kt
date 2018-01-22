@@ -58,8 +58,8 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
     for (string in substrings) {
         var count = 0
         for (line in File(inputName).readLines()) {
-                count += string.toLowerCase().toRegex().findAll(line.toLowerCase()).count()
-                result.put(string, count)
+            count += string.toLowerCase().toRegex().findAll(line.toLowerCase()).count()
+            result.put(string, count)
         }
     }
     return result
@@ -80,7 +80,37 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  *
  */
 fun sibilants(inputName: String, outputName: String) {
-    TODO()
+    val consonants = listOf('Ж', 'Ч', 'Ш', 'Щ', 'ж', 'ч', 'ш', 'щ')
+    val vowels = listOf('Ы', 'ы', 'Я', 'я', 'Ю', 'ю')
+    val writer = File(outputName).bufferedWriter()
+    for (line in File(inputName).readLines()) {
+        if (line.isEmpty())
+            writer.newLine()
+        else {
+            val result = StringBuilder()
+            var i = 0
+            while (i < line.length - 1) {
+                i++
+                result.append(line[i - 1])
+                if (line[i - 1] in consonants && line[i] in vowels) {
+                    when (line[i]) {
+                        'Ы' -> result.append('И')
+                        'ы' -> result.append('и')
+                        'Я' -> result.append('А')
+                        'я' -> result.append('а')
+                        'Ю' -> result.append('У')
+                        'ю' -> result.append('у')
+                    }
+                    i++
+                }
+            }
+            if (i != line.length)
+                result.append(line[i])
+            writer.write(result.toString())
+            writer.newLine()
+        }
+    }
+    writer.close()
 }
 
 /**
@@ -100,8 +130,32 @@ fun sibilants(inputName: String, outputName: String) {
  * 4) Число строк в выходном файле должно быть равно числу строк во входном (в т. ч. пустых)
  *
  */
+
+fun maxLength (inputName: String):Int {
+    var max = -1
+    for (line in File(inputName).readLines()) {
+        if (line.trim().length > max) max = line.trim().length
+    }
+    return max
+}
+
 fun centerFile(inputName: String, outputName: String) {
-    TODO()
+    val writer = File(outputName).bufferedWriter()
+    val maxLength = maxLength(inputName)
+    for (line in File(inputName).readLines()) {
+        if ((line.trim()).length == maxLength) {
+            writer.write(line.trim())
+            writer.newLine()
+        } else {
+            val difference = maxLength - line.trim().length
+            for (i in 0 until difference / 2) {
+                writer.write(" ")
+            }
+            writer.write(line.trim())
+            writer.newLine()
+        }
+    }
+    writer.close()
 }
 
 /**
@@ -132,8 +186,36 @@ fun centerFile(inputName: String, outputName: String) {
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
-    TODO()
+    val writer = File(outputName).bufferedWriter()
+    val maxLength = maxLength(inputName)
+    for (line in File(inputName).readLines()) {
+        if (line.isEmpty()) writer.newLine()
+        else {
+            val resultLine = StringBuilder()
+            if (line.length < maxLength) {
+                val wordsInLine = line.trim().split(Regex("\\s+"))
+                var letters = 0
+                for (word in wordsInLine) {
+                    letters += word.length
+                }
+                for (word in wordsInLine) {
+                    resultLine.append(word)
+                    if (wordsInLine.size != 1 && word != wordsInLine.last()) {
+                        val space = Math.floor((maxLength - letters) / (wordsInLine.size - 1.0))
+                        for (i in 0..space.toInt())
+                            resultLine.append(" ")
+                    }
+                }
+            }
+            else resultLine.append(line.trim())
+            writer.write(resultLine.toString())
+            if (line != File(inputName).readLines().last())
+                writer.newLine()
+            }
+        }
+    writer.close()
 }
+
 
 /**
  * Средняя
