@@ -185,34 +185,55 @@ fun centerFile(inputName: String, outputName: String) {
  * 7) В самой длинной строке каждая пара соседних слов должна быть отделена В ТОЧНОСТИ одним пробелом
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
+
 fun alignFileByWidth(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
+    val ansList = mutableListOf<String>()
+    File(inputName).readLines().forEach { ansList.add(it.trim()) }
     val maxLength = maxLength(inputName)
-    for (line in File(inputName).readLines()) {
+
+    for (line in ansList) {
+
         if (line.isEmpty()) writer.newLine()
+
         else {
-            val resultLine = StringBuilder()
-            if (line.length < maxLength) {
-                val wordsInLine = line.trim().split(Regex("\\s+"))
-                var letters = 0
-                for (word in wordsInLine) {
-                    letters += word.length
-                }
-                for (word in wordsInLine) {
-                    resultLine.append(word)
-                    if (wordsInLine.size != 1 && word != wordsInLine.last()) {
-                        val space = Math.floor((maxLength - letters) / (wordsInLine.size - 1.0))
-                        for (i in 0..space.toInt())
-                            resultLine.append(" ")
+            val ansLine = StringBuilder(line)
+            var wordsInLine = line.split(Regex( "\\s+"))
+
+
+            if (wordsInLine.size > 1) {
+                var ind = 0
+                var count = 0
+                var i = 0
+                while (i < wordsInLine.size) {
+                    if (wordsInLine[i] == "") {
+                        ansLine.deleteCharAt(ind)
+                        wordsInLine -= wordsInLine[i]
+                    } else {
+                        ind += wordsInLine[i].length + 1
+                        i++
                     }
                 }
+
+                val length = ansLine.length
+
+                for (i in 0 until maxLength - length) {
+                    if (i % (wordsInLine.size - 1) == 0) {
+                        count++
+                        ind = 0
+                    }
+                    val part = wordsInLine[i % (wordsInLine.size - 1)]
+                    ind += part.length
+                    ansLine.insert(ind, ' ')
+                    ind += count + 1
+                }
+
+
             }
-            else resultLine.append(line.trim())
-            writer.write(resultLine.toString())
-            if (line != File(inputName).readLines().last())
-                writer.newLine()
-            }
+            writer.write(ansLine.toString())
+            writer.newLine()
         }
+    }
     writer.close()
 }
 
