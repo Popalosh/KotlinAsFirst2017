@@ -131,7 +131,7 @@ fun sibilants(inputName: String, outputName: String) {
  *
  */
 
-fun maxLength (inputName: String):Int {
+fun maxLength(inputName: String): Int {
     var max = -1
     for (line in File(inputName).readLines()) {
         if (line.trim().length > max) max = line.trim().length
@@ -188,43 +188,47 @@ fun centerFile(inputName: String, outputName: String) {
 
 fun alignFileByWidth(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
-    val list = mutableListOf<String>()
-    for (line in File(inputName).readLines()) {
-        list.add(line.trim())
-    }
     val maxLength = maxLength(inputName)
-    for (line in list) {
-        if (line.isEmpty()) {
-            writer.newLine()
-        } else {
-            val curLine = StringBuilder(line)
-            var wordsInLine = line.split(Regex("\\s+"))
-            if (wordsInLine.size > 1) {
-                var ind = 0
-                var count = 0
-                var i = 0
-                while (i < wordsInLine.size) {
-                    if (wordsInLine[i] == "") {
-                        curLine.deleteCharAt(ind)
-                        wordsInLine -= wordsInLine[i]
-                    } else {
-                        ind += wordsInLine[i].length + 1
-                        i++
+    for (line in File(inputName).readLines()) {
+        if (line.isEmpty()) writer.newLine()
+        else {
+            val resultLine = StringBuilder()
+
+            if (line.length < maxLength) {
+
+                val wordsInLine = line.trim().split(Regex("\\s++"))
+
+                val allSpaces = ((maxLength - line.trim().length))
+                var aPartOfSpaces = 0
+                var ost = 0
+
+                if (wordsInLine.size > 1)
+                    aPartOfSpaces += Math.floor(allSpaces / (wordsInLine.size - 1.0)).toInt()
+
+                if (aPartOfSpaces != allSpaces)
+                    ost += allSpaces - (aPartOfSpaces * (wordsInLine.size - 1))
+
+                var wordNumber = 1
+
+                for (word in wordsInLine) {
+                    resultLine.append(word)
+
+                    if (wordsInLine.size != 1 && wordNumber != wordsInLine.size) {
+                        wordNumber++
+
+                        if (ost != 0) {
+                            resultLine.append(" ")
+                            ost--
+                        }
+
+                        for (i in 0..aPartOfSpaces)
+                            resultLine.append(" ")
+
                     }
                 }
-                val length = curLine.length
-                for (i in 0 until maxLength - length) {
-                    if (i % (wordsInLine.size - 1) == 0) {
-                        count++
-                        ind = 0
-                    }
-                    val part = wordsInLine[i % (wordsInLine.size - 1)]
-                    ind += part.length
-                    curLine.insert(ind, ' ')
-                    ind += count + 1
-                }
-            }
-            writer.write(curLine.toString())
+            } else resultLine.append(line.trim())
+
+            writer.write(resultLine.toString())
             writer.newLine()
         }
     }
