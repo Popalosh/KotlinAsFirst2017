@@ -194,6 +194,8 @@ fun alignFileByWidth(inputName: String, outputName: String) {
         else {
             val resultLine = StringBuilder()
 
+            val exeption = StringBuilder()
+
             if (line.length < maxLength) {
 
                 val wordsInLine = line.trim().split(Regex("\\s++"))
@@ -208,17 +210,18 @@ fun alignFileByWidth(inputName: String, outputName: String) {
                 if (aPartOfSpaces != allSpaces)
                     ost += allSpaces - (aPartOfSpaces * (wordsInLine.size - 1))
 
-                var wordNumber = 1
+                var exeptionOst = ost + 1
 
+                var wordNumber = 1
+                var exeptionWordNumber = 1
                 for (word in wordsInLine) {
                     resultLine.append(word)
 
                     if (wordsInLine.size != 1 && wordNumber != wordsInLine.size) {
                         wordNumber++
-
                         if (ost != 0) {
-                            resultLine.append(" ")
-                            ost--
+                                resultLine.append(" ")
+                                ost--
                         }
 
                         for (i in 0..aPartOfSpaces)
@@ -226,9 +229,28 @@ fun alignFileByWidth(inputName: String, outputName: String) {
 
                     }
                 }
-            } else resultLine.append(line.trim())
+                if (resultLine.length != maxLength) {
 
-            writer.write(resultLine.toString())
+                    for (word in wordsInLine) {
+                        exeption.append(word)
+
+                        if (wordsInLine.size != 1 && exeptionWordNumber != wordsInLine.size) {
+                            exeptionWordNumber++
+                            if (exeptionOst != 0) {
+                                exeption.append(" ")
+                                exeptionOst--
+                            }
+
+                            for (i in 0..aPartOfSpaces)
+                                exeption.append(" ")
+                        }
+                    }
+                }
+            } else resultLine.append(line.trim())
+            if (resultLine.length == maxLength) {
+                writer.write(resultLine.toString())
+            }
+            else writer.write(exeption.toString())
             writer.newLine()
         }
     }
