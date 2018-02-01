@@ -190,19 +190,30 @@ fun alignFileByWidth(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
     val maxLength = maxLength(inputName)
     for (line in File(inputName).readLines()) {
-        if (line.isEmpty()) writer.newLine()
-        else {
-            val resultLine = StringBuilder()
+        val wordsInLine = line.trim().split(Regex("\\s++"))
 
-            val exeption = StringBuilder()
+        val resultLine = StringBuilder()
 
-            if (line.length < maxLength) {
+        when {
+            line.isEmpty() -> writer.newLine()
 
-                val wordsInLine = line.trim().split(Regex("\\s++"))
+            wordsInLine.size == 1 -> {
+                resultLine.append(wordsInLine[0])
+                writer.write(resultLine.toString())
+                writer.newLine()
+            }
 
+            line.length == maxLength -> {
+                resultLine.append(line)
+                writer.write(resultLine.toString())
+                writer.newLine()
+            }
+
+            else -> {
                 val allSpaces = ((maxLength - line.trim().length))
                 var aPartOfSpaces = 0
                 var ost = 0
+                var newOst = 0
 
                 if (wordsInLine.size > 1)
                     aPartOfSpaces += Math.floor(allSpaces / (wordsInLine.size - 1.0)).toInt()
@@ -210,48 +221,37 @@ fun alignFileByWidth(inputName: String, outputName: String) {
                 if (aPartOfSpaces != allSpaces)
                     ost += allSpaces - (aPartOfSpaces * (wordsInLine.size - 1))
 
-                var exeptionOst = ost + 1
-
                 var wordNumber = 1
-                var exeptionWordNumber = 1
-                for (word in wordsInLine) {
-                    resultLine.append(word)
 
-                    if (wordsInLine.size != 1 && wordNumber != wordsInLine.size) {
-                        wordNumber++
-                        if (ost != 0) {
-                                resultLine.append(" ")
-                                ost--
-                        }
+                while (resultLine.length != maxLength) {
 
-                        for (i in 0..aPartOfSpaces)
-                            resultLine.append(" ")
-
-                    }
-                }
-                if (resultLine.length != maxLength) {
+                    newOst += ost
 
                     for (word in wordsInLine) {
-                        exeption.append(word)
+                        resultLine.append(word)
 
-                        if (wordsInLine.size != 1 && exeptionWordNumber != wordsInLine.size) {
-                            exeptionWordNumber++
-                            if (exeptionOst != 0) {
-                                exeption.append(" ")
-                                exeptionOst--
-                            }
+                        if (wordsInLine.size != 1 && wordNumber != wordsInLine.size) {
+                            wordNumber++
 
                             for (i in 0..aPartOfSpaces)
-                                exeption.append(" ")
+                                resultLine.append(" ")
+
+                            if (newOst != 0) {
+                                resultLine.append(" ")
+                                newOst--
+                            }
                         }
                     }
+
+                    if (resultLine.length != maxLength) {
+                        resultLine.delete(0, Int.MAX_VALUE)
+                        wordNumber -= wordsInLine.size - 1
+                        ost++
+                    }
                 }
-            } else resultLine.append(line.trim())
-            if (resultLine.length == maxLength) {
                 writer.write(resultLine.toString())
+                writer.newLine()
             }
-            else writer.write(exeption.toString())
-            writer.newLine()
         }
     }
     writer.close()
