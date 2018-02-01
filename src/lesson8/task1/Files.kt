@@ -215,8 +215,7 @@ fun alignFileByWidth(inputName: String, outputName: String) {
                 var ost = 0
                 var newOst = 0
 
-                if (wordsInLine.size > 1)
-                    aPartOfSpaces += Math.floor(allSpaces / (wordsInLine.size - 1.0)).toInt()
+                aPartOfSpaces += Math.floor(allSpaces / (wordsInLine.size - 1.0)).toInt()
 
                 if (aPartOfSpaces != allSpaces)
                     ost += allSpaces - (aPartOfSpaces * (wordsInLine.size - 1))
@@ -226,6 +225,12 @@ fun alignFileByWidth(inputName: String, outputName: String) {
                 while (resultLine.length != maxLength) {
 
                     newOst += ost
+
+                    if (newOst == wordsInLine.size) {
+                        aPartOfSpaces++
+                        ost = allSpaces - (aPartOfSpaces * (wordsInLine.size - 1))
+                        newOst = ost
+                    }
 
                     for (word in wordsInLine) {
                         resultLine.append(word)
@@ -244,8 +249,9 @@ fun alignFileByWidth(inputName: String, outputName: String) {
                     }
 
                     if (resultLine.length != maxLength) {
+                        newOst = 0
                         resultLine.delete(0, Int.MAX_VALUE)
-                        wordNumber -= wordsInLine.size - 1
+                        wordNumber = 1
                         ost++
                     }
                 }
