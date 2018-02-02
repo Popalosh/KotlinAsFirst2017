@@ -181,6 +181,54 @@ fun centerFile(inputName: String, outputName: String) {
  * 7) В самой длинной строке каждая пара соседних слов должна быть отделена В ТОЧНОСТИ одним пробелом
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
+fun alignment(maxLength:Int, line:String, wordsInLine:List<String>, resultLine:StringBuilder):StringBuilder {
+    val allSpaces = ((maxLength - line.trim().length))
+    var aPartOfSpaces = 0
+    var ost = 0
+    var newOst = 0
+
+    aPartOfSpaces += Math.floor(allSpaces / (wordsInLine.size - 1.0)).toInt()
+
+    if (aPartOfSpaces != allSpaces)
+        ost += allSpaces - (aPartOfSpaces * (wordsInLine.size - 1))
+
+    var wordNumber = 1
+
+    while (resultLine.length != maxLength) {
+
+        newOst += ost
+
+        if (newOst == wordsInLine.size) {
+            aPartOfSpaces++
+            ost = allSpaces - (aPartOfSpaces * (wordsInLine.size - 1))
+            newOst = ost
+        }
+
+        for (word in wordsInLine) {
+            resultLine.append(word)
+
+            if (wordsInLine.size != 1 && wordNumber != wordsInLine.size) {
+                wordNumber++
+
+                for (i in 0..aPartOfSpaces)
+                    resultLine.append(" ")
+
+                if (newOst != 0) {
+                    resultLine.append(" ")
+                    newOst--
+                }
+            }
+        }
+
+        if (resultLine.length != maxLength) {
+            newOst = 0
+            resultLine.delete(0, Int.MAX_VALUE)
+            wordNumber = 1
+            ost++
+        }
+    }
+    return resultLine
+}
 
 fun letters(line: String): Int {
     val wordsInLine = line.trim().split(Regex("\\s++"))
@@ -226,51 +274,7 @@ fun alignFileByWidth(inputName: String, outputName: String) {
             }
 
             letters(line) < otherLength -> {
-                val allSpaces = ((maxLength - line.trim().length))
-                var aPartOfSpaces = 0
-                var ost = 0
-                var newOst = 0
-
-                aPartOfSpaces += Math.floor(allSpaces / (wordsInLine.size - 1.0)).toInt()
-
-                if (aPartOfSpaces != allSpaces)
-                    ost += allSpaces - (aPartOfSpaces * (wordsInLine.size - 1))
-
-                var wordNumber = 1
-
-                while (resultLine.length != maxLength) {
-
-                    newOst += ost
-
-                    if (newOst == wordsInLine.size) {
-                        aPartOfSpaces++
-                        ost = allSpaces - (aPartOfSpaces * (wordsInLine.size - 1))
-                        newOst = ost
-                    }
-
-                    for (word in wordsInLine) {
-                        resultLine.append(word)
-
-                        if (wordsInLine.size != 1 && wordNumber != wordsInLine.size) {
-                            wordNumber++
-
-                            for (i in 0..aPartOfSpaces)
-                                resultLine.append(" ")
-
-                            if (newOst != 0) {
-                                resultLine.append(" ")
-                                newOst--
-                            }
-                        }
-                    }
-
-                    if (resultLine.length != maxLength) {
-                        newOst = 0
-                        resultLine.delete(0, Int.MAX_VALUE)
-                        wordNumber = 1
-                        ost++
-                    }
-                }
+                alignment(maxLength, line, wordsInLine, resultLine)
                 writer.write(resultLine.toString())
                 writer.newLine()
             }
