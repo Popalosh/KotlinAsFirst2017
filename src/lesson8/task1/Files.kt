@@ -181,82 +181,53 @@ fun centerFile(inputName: String, outputName: String) {
  * 7) В самой длинной строке каждая пара соседних слов должна быть отделена В ТОЧНОСТИ одним пробелом
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
-fun alignment(maxLength:Int, line:String, wordsInLine:List<String>, resultLine:StringBuilder):StringBuilder {
-    val allSpaces = ((maxLength - line.trim().length))
-    var aPartOfSpaces = 0
-    var ost = 0
-    var newOst = 0
 
-    aPartOfSpaces += Math.floor(allSpaces / (wordsInLine.size - 1.0)).toInt()
-
-    if (aPartOfSpaces != allSpaces)
-        ost += allSpaces - (aPartOfSpaces * (wordsInLine.size - 1))
-
+fun alignment(maxLength: Int, line: String, wordsInLine: List<String>): String {
+    var result = ""
+    val allSpaces = maxLength - lineLen(wordsInLine)
+    var ost = allSpaces % (wordsInLine.size - 1)
+    val aPartOfSpaces = (allSpaces - ost) / (wordsInLine.size - 1) - 1
     var wordNumber = 1
+    for (word in wordsInLine) {
+        result += word
 
-    while (resultLine.length != maxLength) {
+        if (wordsInLine.size != 1 && wordNumber != wordsInLine.size) {
 
-        newOst += ost
+            wordNumber++
 
-        if (newOst == wordsInLine.size) {
-            aPartOfSpaces++
-            ost = allSpaces - (aPartOfSpaces * (wordsInLine.size - 1))
-            newOst = ost
-        }
-
-        for (word in wordsInLine) {
-            resultLine.append(word)
-
-            if (wordsInLine.size != 1 && wordNumber != wordsInLine.size) {
-                wordNumber++
-
-                for (i in 0..aPartOfSpaces)
-                    resultLine.append(" ")
-
-                if (newOst != 0) {
-                    resultLine.append(" ")
-                    newOst--
-                }
+            for (i in 0..aPartOfSpaces)
+                result += " "
+            if (ost != 0) {
+                result += " "
+                ost--
             }
         }
-
-        if (resultLine.length != maxLength) {
-            newOst = 0
-            resultLine.delete(0, Int.MAX_VALUE)
-            wordNumber = 1
-            ost++
-        }
     }
-    return resultLine
+    return result
 }
 
-fun letters(line: String): Int {
-    val wordsInLine = line.trim().split(Regex("\\s++"))
-    var letters = 0
-    for (word in wordsInLine)
-        letters += word.length
-    return letters
+fun lineLen(line: List<String>): Int {
+    var lineLeng = 0
+    for (word in line)
+        lineLeng += word.length
+    return lineLeng
 }
 
 fun alignFileByWidth(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
     var maxLength = -1
-    var otherLength = 0
     val maxLine = StringBuilder()
-
     for (line in File(inputName).readLines()) {
-        val letters = letters(line)
-        if (letters > otherLength) {
-            maxLength = line.trim().length
-            otherLength = letters
+        val simbsInLine = line.trim().length
+        if (simbsInLine > maxLength) {
+            maxLength = simbsInLine
             maxLine.delete(0, Int.MAX_VALUE)
             maxLine.append(line)
         }
     }
-
     for (line in File(inputName).readLines()) {
-        val wordsInLine = line.trim().split(Regex("\\s++"))
-
+        val useLine = line.trim()
+        val wordsInLine = useLine.split(Regex("\\s++"))
         val resultLine = StringBuilder()
 
         when {
@@ -269,13 +240,12 @@ fun alignFileByWidth(inputName: String, outputName: String) {
             }
 
             line == maxLine.toString() -> {
-                writer.write(line.trim())
+                writer.write(useLine)
                 writer.newLine()
             }
 
-            letters(line) < otherLength -> {
-                alignment(maxLength, line, wordsInLine, resultLine)
-                writer.write(resultLine.toString())
+            useLine.length <= maxLength -> {
+                writer.write(alignment(maxLength, useLine, wordsInLine))
                 writer.newLine()
             }
         }
