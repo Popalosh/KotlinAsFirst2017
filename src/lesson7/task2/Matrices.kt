@@ -1,4 +1,5 @@
 @file:Suppress("UNUSED_PARAMETER")
+
 package lesson7.task2
 
 import lesson7.task1.Matrix
@@ -65,10 +66,10 @@ fun generateSpiral(height: Int, width: Int): Matrix<Int> {
     var currentNumber = 0
     val lastNumber = height * width
     while (currentNumber < lastNumber) {
-        for (column in passedCircles..(width - passedCircles)) {
+        for (column in passedCircles until width - passedCircles) {
             result[passedCircles, column] = ++currentNumber
         }
-        for (row in 1 + passedCircles..(height - passedCircles)) {
+        for (row in 1 + passedCircles until height - passedCircles) {
             result[row, width - 1 - passedCircles] = ++currentNumber
         }
         for (column in width - 2 - passedCircles downTo 0 + passedCircles) {
