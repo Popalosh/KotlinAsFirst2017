@@ -62,23 +62,25 @@ operator fun Matrix<Int>.plus(other: Matrix<Int>): Matrix<Int> {
 fun generateSpiral(height: Int, width: Int): Matrix<Int> {
     val result = createMatrix(height, width, 0)
     var passedCircles = 0
-    var counter = 0
-    val countLimit = height * width
-    do {
-        for (column in passedCircles until width - passedCircles) {
-            result[passedCircles, column] = ++counter
+    var currentNumber = 0
+    val lastNumber = height * width
+    while (currentNumber < lastNumber) {
+        for (column in passedCircles..(width - passedCircles)) {
+            result[passedCircles, column] = ++currentNumber
         }
-        for (row in 1 + passedCircles until height - passedCircles) {
-            result[row, width - 1 - passedCircles] = ++counter
+        for (row in 1 + passedCircles..(height - passedCircles)) {
+            result[row, width - 1 - passedCircles] = ++currentNumber
         }
         for (column in width - 2 - passedCircles downTo 0 + passedCircles) {
-            if (counter < countLimit) result[height - 1 - passedCircles, column] = ++counter
+            if (currentNumber < lastNumber)
+                result[height - 1 - passedCircles, column] = ++currentNumber
         }
         for (row in height - 2 - passedCircles downTo 1 + passedCircles) {
-            if (counter < countLimit) result[row, 0 + passedCircles] = ++counter
+            if (currentNumber < lastNumber)
+                result[row, 0 + passedCircles] = ++currentNumber
         }
         passedCircles++
-    } while (counter < countLimit)
+    }
     return result
 }
 

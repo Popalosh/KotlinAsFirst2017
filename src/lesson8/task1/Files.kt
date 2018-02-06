@@ -87,26 +87,26 @@ fun sibilants(inputName: String, outputName: String) {
         if (line.isEmpty())
             writer.newLine()
         else {
-            val result = StringBuilder()
+            val resultLine = StringBuilder()
             var i = 0
             while (i < line.length - 1) {
                 i++
-                result.append(line[i - 1])
+                resultLine.append(line[i - 1])
                 if (line[i - 1] in consonants && line[i] in vowels) {
                     when (line[i]) {
-                        'Ы' -> result.append('И')
-                        'ы' -> result.append('и')
-                        'Я' -> result.append('А')
-                        'я' -> result.append('а')
-                        'Ю' -> result.append('У')
-                        'ю' -> result.append('у')
+                        'Ы' -> resultLine.append('И')
+                        'ы' -> resultLine.append('и')
+                        'Я' -> resultLine.append('А')
+                        'я' -> resultLine.append('а')
+                        'Ю' -> resultLine.append('У')
+                        'ю' -> resultLine.append('у')
                     }
                     i++
                 }
             }
             if (i != line.length)
-                result.append(line[i])
-            writer.write(result.toString())
+                resultLine.append(line[i])
+            writer.write(resultLine.toString())
             writer.newLine()
         }
     }
