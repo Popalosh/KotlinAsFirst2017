@@ -99,7 +99,27 @@ fun generateSpiral(height: Int, width: Int): Matrix<Int> {
  *  1  2  2  2  2  1
  *  1  1  1  1  1  1
  */
-fun generateRectangles(height: Int, width: Int): Matrix<Int> = TODO()
+fun generateRectangles(height: Int, width: Int): Matrix<Int> {
+    val result = createMatrix(height,width,0)
+    var passedCircles = 0
+    var maxNumber = 0
+    if (height > width) maxNumber += Math.ceil(width/2.0).toInt()
+    else maxNumber += Math.ceil(height/2.0).toInt()
+    var currentNumber = 1
+    while (currentNumber <= maxNumber) {
+        for (column in passedCircles until width - passedCircles)
+            result[passedCircles, column] = currentNumber
+        for (row in 1 + passedCircles until height - passedCircles)
+            result[row, width - 1 - passedCircles] = currentNumber
+        for (column in width - 2 - passedCircles downTo 0 + passedCircles)
+                result[height - 1 - passedCircles, column] = currentNumber
+        for (row in height - 2 - passedCircles downTo 1 + passedCircles)
+                result[row, 0 + passedCircles] = currentNumber
+        currentNumber++
+        passedCircles++
+    }
+    return result
+}
 
 /**
  * Сложная
